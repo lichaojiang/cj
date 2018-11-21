@@ -7,10 +7,10 @@
     "start": "forever start ./bin/www",
     "restart": "forever restart ./bin/www",
     "stop": "forever stop ./bin/www",
-    "setup": "source ./scripts/setup.sh",
-    "rstart": "source ./scripts/remote.sh start",
-    "rstop": "source ./scripts/remote.sh stop",
-    "rrestart": "source ./scripts/remote.sh restart"
+    "setup": "./scripts/setup.sh",
+    "rstart": "./scripts/remote.sh start",
+    "rstop": "./scripts/remote.sh stop",
+    "rrestart": "./scripts/remote.sh restart"
   },
   "dependencies": {
     "cookie-parser": "~1.4.3",

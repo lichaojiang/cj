@@ -3,9 +3,7 @@ cwd=$(pwd)
 
 # 找到本脚本路径
 SCRIPT_DIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )"
-cd "${SCRIPT_DIR}/.." && ROOT_DIR=$(pwd)
-
-cd $SCRIPT_DIR
+ROOT_DIR=$(cd "${SCRIPT_DIR}/.." && pwd)
 
 conda_link=""
 conda_sh=""
@@ -56,3 +54,5 @@ fi
 conda env create --prefix "${ROOT_DIR}/envs/bivstats" --file "${ROOT_DIR}/EXE/Analysiscore/stats_env.yml"
 
 cd $cwd
+
+path=$(conda info --env | grep bivstats)
