@@ -40,7 +40,6 @@ fi
 if [ ! -z "$isDarwin" ];then
     source ~/.bash_profile
 elif [ ! -z "$isLinux" ];then
-    echo 2
     source ~/.bashrc
 fi
 
