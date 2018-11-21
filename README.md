@@ -1,24 +1,24 @@
-Start the server by script
+npm commands
 =========================
-* In production environment, start
+* In production environment, start server
 ```
-    source server start
+    npm run start
 ```
-* or stop
+* or stop server
 ```
-    source server stop
+    npm run stop
 ```
-* or restart
+* or restart sever
 ```
-    source server restart
+    npm run restart
 ```
 * In development environment, via port 9528
 ```
-    source server dev
+    npm run dev
 ```
-* Use install option to initiate node modules when in development environment
+* setup miniconda
 ```
-    source server dev install
+    npm run setup
 ```
 
 
@@ -26,7 +26,7 @@ Start the Node sever by forever
 =========================
 * start the node server
 ```bash
-    forever start /var/BivBackend/myapp/bin/www
+    forever start /var/bivServer/bin/www
 ```    
 * stop the node server
     * 1. look up PID of running server instance by:
@@ -39,16 +39,4 @@ Start the Node sever by forever
 ```    
 * Restart the node server
     please first stop the server then start again.
-
-
-配置miniconda（linux, mac）
-=========================
-* 运行setupconda.sh
-
-* 按照提示完成安装，提示如下：
-    1. 直接enter
-    2. 输入yes（答应license）
-    3. enter（默认路径）
-    4. 输入yes（注册miniconda路径）
-
 
