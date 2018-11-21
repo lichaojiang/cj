@@ -1,0 +1,30 @@
+#!/bin/bash
+cwd=$(pwd)
+
+SCRIPT_DIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )"
+
+cd "${SCRIPT_DIR}"
+
+if [ "$1" == "dev" ];then
+    if [ "$2" == "install" ];then
+        npm install  
+    fi
+    npm run dev
+elif [ "$1" == "setup" ];then
+    
+elif [ "$1" == "start" ];then
+    npm install
+    npm run start
+elif [ "$1" == "stop" ];then
+    npm install
+    npm run stop
+elif [ "$1" == "restart" ];then
+    npm install
+    npm run restart
+elif [ "$1" == "remote" ];then
+    echo -n "Remote server user name:"
+    read user
+    ssh "${user}@admin.bivrost.cn" "cd /var/bivServer/ && git pull && ./server restart"
+fi
+
+cd $cwd

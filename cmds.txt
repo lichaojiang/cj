@@ -1,0 +1,2 @@
+windows:set DEBUG=myapp:* & npm start
+linux:DEBUG=myapp:* npm start

@@ -1,0 +1,21 @@
+{
+  "name": "myapp",
+  "version": "0.1.0",
+  "private": true,
+  "scripts": {
+    "start": "forever start ./bin/www",
+    "restart": "forever restart ./bin/www",
+    "stop": "forever stop ./bin/www",
+    "dev": "PORT=9528 nodemon ./bin/www",
+    "setup": "node "
+  },
+  "dependencies": {
+    "cookie-parser": "~1.4.3",
+    "debug": "~2.6.9",
+    "express": "^4.16.4",
+    "http-errors": "~1.6.2",
+    "jade": "~1.11.0",
+    "moment": "~2.22.2",
+    "morgan": "^1.9.1"
+  }
+}
