@@ -50,7 +50,14 @@ echo $bivstats_env
 if [ ! -z "$bivstats_env" ];then
     conda remove --prefix "${ROOT_DIR}/envs/bivstats" --all --yes --force
 fi
-conda env create --prefix "${ROOT_DIR}/envs/bivstats" --file "${ROOT_DIR}/EXE/Analysiscore/stats_env.yml"
+
+# create environment
+if [ ! -z "$isDarwin" ];then
+    conda env create --prefix "${ROOT_DIR}/envs/bivstats" --file "${ROOT_DIR}/EXE/Analysiscore_mac/stats_env.yml"
+elif [ ! -z "$isLinux" ];then
+    conda env create --prefix "${ROOT_DIR}/envs/bivstats" --file "${ROOT_DIR}/EXE/Analysiscore_linux/stats_env.yml"
+fi
+
 
 cd $cwd
 
