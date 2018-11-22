@@ -1,4 +1,4 @@
 import json
-from Analysiscore.lib.util.status import status
+from analysiscore.func import status
 
 print(json.dumps(status))
