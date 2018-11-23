@@ -37,11 +37,12 @@ else
     echo "Conda is already installed."
 fi
 
-# source to enable conda PATH
+# export conda path explicitly when in non interactive shell
 if [ ! -z "$isDarwin" ];then
     source ~/.bash_profile
 elif [ ! -z "$isLinux" ];then
-    source ~/.bashrc
+    conda_path=$(cat ~/.bashrc | grep "conda3/")
+    eval $conda_path
 fi
 
 # 安装虚拟环境
