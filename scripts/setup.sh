@@ -22,6 +22,7 @@ fi
 # 安装miniconda
 isConda="$(which conda | grep 'conda')"
 if [ -z "$isConda" ];then
+    cd $SCRIPT_DIR
     # 下载miniconda
     wget $conda_link
     # 安装conda
