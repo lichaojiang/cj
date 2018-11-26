@@ -1,5 +1,10 @@
-npm commands
-=========================
+# First time setup
+```
+    npm run setup
+```
+
+
+# npm commands
 * In production environment, start server
 ```
     npm run start
@@ -22,8 +27,7 @@ npm commands
 ```
 
 
-Start the Node sever by forever
-=========================
+# Start the Node sever by forever
 * start the node server
 ```bash
     forever start /var/bivServer/bin/www

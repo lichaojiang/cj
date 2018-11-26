@@ -22,6 +22,7 @@ fi
 # 安装miniconda
 isConda="$(which conda | grep 'conda')"
 if [ -z "$isConda" ];then
+    cd $SCRIPT_DIR
     # 下载miniconda
     wget $conda_link
     # 安装conda
@@ -36,11 +37,12 @@ else
     echo "Conda is already installed."
 fi
 
-# source to enable conda PATH
+# export conda path explicitly when in non interactive shell
 if [ ! -z "$isDarwin" ];then
     source ~/.bash_profile
 elif [ ! -z "$isLinux" ];then
-    source ~/.bashrc
+    conda_path=$(cat ~/.bashrc | grep "conda3/")
+    eval $conda_path
 fi
 
 # 安装虚拟环境
@@ -50,7 +52,27 @@ echo $bivstats_env
 if [ ! -z "$bivstats_env" ];then
     conda remove --prefix "${ROOT_DIR}/envs/bivstats" --all --yes --force
 fi
-conda env create --prefix "${ROOT_DIR}/envs/bivstats" --file "${ROOT_DIR}/EXE/Analysiscore/stats_env.yml"
+
+# create environment
+if [ ! -z "$isDarwin" ];then
+    core_dir = "${ROOT_DIR}/EXE/Analysiscore_mac"
+    # conda env create --prefix "${ROOT_DIR}/envs/bivstats" --file "${ROOT_DIR}/EXE/Analysiscore_mac/stats_env.yml"
+elif [ ! -z "$isLinux" ];then
+    core_dir = "${ROOT_DIR}/EXE/Analysiscore_linux"
+    # conda env create --prefix "${ROOT_DIR}/envs/bivstats" --file "${ROOT_DIR}/EXE/Analysiscore_linux/stats_env.yml"
+fi
+
+cd $core_dir
+all_ymls=($(find . -type f -name "*.yml"))
+for i in "${all_ymls[@]}"
+do
+    echo "$i"
+    name=$(grep "name" "$i")
+    # remove everything up to colon and leading whitespace
+    name=$(echo ${name#*:} | sed -e 's/^[[:space:]]*//')
+    # create environment
+    conda env create --prefix "${ROOT_DIR}/envs/${name}" --file "${core_dir}/${i}"
+done
 
 cd $cwd
 
