@@ -1,4 +1,6 @@
 import json
-from analysiscore.func import status
+import importlib
+from analysiscore import core
+status = importlib.import_module('.lib.util.status', core)
 
-print(json.dumps(status))
+print(json.dumps(status.status))

@@ -55,11 +55,24 @@ fi
 
 # create environment
 if [ ! -z "$isDarwin" ];then
-    conda env create --prefix "${ROOT_DIR}/envs/bivstats" --file "${ROOT_DIR}/EXE/Analysiscore_mac/stats_env.yml"
+    core_dir = "${ROOT_DIR}/EXE/Analysiscore_mac"
+    # conda env create --prefix "${ROOT_DIR}/envs/bivstats" --file "${ROOT_DIR}/EXE/Analysiscore_mac/stats_env.yml"
 elif [ ! -z "$isLinux" ];then
-    conda env create --prefix "${ROOT_DIR}/envs/bivstats" --file "${ROOT_DIR}/EXE/Analysiscore_linux/stats_env.yml"
+    core_dir = "${ROOT_DIR}/EXE/Analysiscore_linux"
+    # conda env create --prefix "${ROOT_DIR}/envs/bivstats" --file "${ROOT_DIR}/EXE/Analysiscore_linux/stats_env.yml"
 fi
 
+cd $core_dir
+all_ymls=($(find . -type f -name "*.yml"))
+for i in "${all_ymls[@]}"
+do
+    echo "$i"
+    name=$(grep "name" "$i")
+    # remove everything up to colon and leading whitespace
+    name=$(echo ${name#*:} | sed -e 's/^[[:space:]]*//')
+    # create environment
+    conda env create --prefix "${ROOT_DIR}/envs/${name}" --file "${core_dir}/${i}"
+done
 
 cd $cwd
 
