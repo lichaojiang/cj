@@ -10,7 +10,7 @@ var usersRouter = require('./routes/users');
 var datatableRouter = require('./routes/datatable');
 var bivcloudRouter = require('./routes/bivcloud');
 var plotRouter = require('./routes/plot');
-
+var bUtil=require('./lib/bUtils');
 var app = express();
 //domain setting
 
@@ -53,22 +53,8 @@ app.use(function(err, req, res, next) {
   res.render('error');
 });
 app.all('*', function(req, res, next) {
-	    var orginList=[
-        "http://www.bivrost.cn",
-        "http://admin.bivrost.cn",
-        "http://127.0.0.1",
-        "http://localhost",
-		"http://localhost:9528"
-    ]
-    if(orginList.includes(req.headers.origin.toLowerCase())){
-        //
-        res.header("Access-Control-Allow-Origin",req.headers.origin);
-    }
-	console.log("in app.all():"+req.headers.origin);
-    res.header("Access-Control-Allow-Headers", "X-Requested-With,x-token");
-    res.header("Access-Control-Allow-Methods","PUT,POST,GET,DELETE,OPTIONS");
-    res.header("X-Powered-By",' 3.2.1')
-    res.header("Content-Type", "application/json;charset=utf-8");
+    bUtil.crossDomain();
+  //  console.log("in app.all():"+req.headers.origin);
     next();
 });
 module.exports = app;
