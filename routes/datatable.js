@@ -7,7 +7,6 @@ var url = require('url');
 const path = require('path');
 const bconst = require('../lib/bConstants');
 const butil = require('../lib/bUtils');
-const bres = require('../lib/bResponse');
 
 /* global var*/
 //var exedir=(os.type()=="Windows_NT")?
