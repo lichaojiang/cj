@@ -3,7 +3,7 @@
   "version": "0.1.0",
   "private": true,
   "scripts": {
-    "dev": "PORT=9528 nodemon ./bin/www",
+    "dev": "PORT=9528 nodemon ./bin/www --ignore envs/",
     "start": "forever start ./bin/www",
     "restart": "forever restart ./bin/www",
     "stop": "forever stop ./bin/www",
