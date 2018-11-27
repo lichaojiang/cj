@@ -35,8 +35,10 @@ router.post('/', function(req, res, next) {
             cmdstr = bconst.statspython+" "+api_get_data+" "+params.start+" "+params.end+" "+
                 params.type+" "+params.machine+" "+params.min+" "+params.max;
             //执行cmdstr
-			console.log("cmd string is:" + cmdstr);
-			exec(cmdstr, (err, stdout, stderr) =>
+            console.log("cmd string is:" + cmdstr);
+            bUtil.execute(cmdstr,bplot.plotLineNoX);
+            /*
+            exec(cmdstr, (err, stdout, stderr) =>
 		    {
                 //如果出错 提示python脚本运行错误
                 if(err){
@@ -48,13 +50,16 @@ router.post('/', function(req, res, next) {
                     let plot = bplot.plotLineNoX(stdout);
                     bres.send(res, plot.data, plot.status);
                 }
-			});		
+            });	
+            */	
 		    break;
         case "hist":
             api_get_data=path.join(bconst.exedir,"getDataByTime.py");
             cmdstr=bconst.statspython+" "+api_get_data+" "+params.start+" "+params.end+" "
                         +params.type+" "+params.machine+" "+params.min+" "+params.max;
             console.log("cmd string is :"+cmdstr);
+            bUtil.execute(cmdstr,bplot.plotHist);
+           /*
             exec(cmdstr,(err,stdout,stderr)=>
             {
                 if(err){
@@ -66,6 +71,7 @@ router.post('/', function(req, res, next) {
                     bres.send(res, plot.data, plot.status);
                 }
             });
+            */
             break;
         case "any":
             // request body

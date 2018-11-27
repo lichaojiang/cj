@@ -19,30 +19,15 @@ router.options("/*", function(req, res, next){
 router.post('/', function(req, res, next) {
     butil.crossDomain;
     var params = url.parse(req.url, true).query;
-    let cmdstr, api_bivstats;
+    let cmdstr, api_bivstats,api_get_data;
 	switch(params.method)
 	{
         case "getStats":
             api_bivstats = path.join(bconst.exedir, "stats.py");
             cmdstr = bconst.statspython+" "+api_bivstats+" "+params.start+" "+params.end+" "+params.type+" "+params.machine;
-			console.log("cmd string is:"+cmdstr);
-			exec(cmdstr,function(err,stdout,stderr) {
-                if(err){
-                    console.log("python script running error:"+stderr);
-                    bres.send(res, stderr, bres.ERROR);
-                    return;
-                }
-                else
-                {
-                    let output = butil.parseStdout(stdout);
-                    bres.send(res, output.data, output.status);
-                }
-		    });		
-			break;
-        case "getDataByTime":
-            api_get_data = path.join(bconst.exedir, "getDataByTime.py");
-            cmdstr = bconst.statspython+" "+api_get_data+" "+params.start+" "+params.end+" "+params.type+" "+params.machine;					
-			console.log("cmd string is:"+cmdstr);
+            console.log("cmd string is:"+cmdstr);
+            butil.execute(cmdstr,butil.parseStdout);
+            /*
             exec(cmdstr,function(err,stdout,stderr) {
                 if(err){
                     console.log("python script running error:"+stderr);
@@ -54,7 +39,28 @@ router.post('/', function(req, res, next) {
                     let output = butil.parseStdout(stdout);
                     bres.send(res, output.data, output.status);
                 }
-		    });	                                                               	    
+		    });		
+            break;
+            */
+        case "getDataByTime":     
+            api_get_data = path.join(bconst.exedir, "getDataByTime.py");
+            cmdstr = bconst.statspython+" "+api_get_data+" "+params.start+" "+params.end+" "+params.type+" "+params.machine;					
+            console.log("cmd string is:"+cmdstr);
+            butil.execute(cmdstr,butil.parseStdout);
+            /*
+            exec(cmdstr,function(err,stdout,stderr) {
+                if(err){
+                    console.log("python script running error:"+stderr);
+                    bres.send(res, stderr, bres.ERROR);
+                    return;
+                }
+                else
+                {
+                    let output = butil.parseStdout(stdout);
+                    bres.send(res, output.data, output.status);
+                }
+            });	   
+            */                                                            	    
 			break;
         default:
 			break;
