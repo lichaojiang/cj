@@ -55,10 +55,10 @@ fi
 
 # create environment
 if [ ! -z "$isDarwin" ];then
-    core_dir = "${ROOT_DIR}/EXE/Analysiscore_mac"
+    core_dir="${ROOT_DIR}/EXE/Analysiscore_mac"
     # conda env create --prefix "${ROOT_DIR}/envs/bivstats" --file "${ROOT_DIR}/EXE/Analysiscore_mac/stats_env.yml"
 elif [ ! -z "$isLinux" ];then
-    core_dir = "${ROOT_DIR}/EXE/Analysiscore_linux"
+    core_dir="${ROOT_DIR}/EXE/Analysiscore_linux"
     # conda env create --prefix "${ROOT_DIR}/envs/bivstats" --file "${ROOT_DIR}/EXE/Analysiscore_linux/stats_env.yml"
 fi
 
