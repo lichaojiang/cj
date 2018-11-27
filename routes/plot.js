@@ -2,7 +2,6 @@
 
 const express = require('express');
 const router = express.Router();
-const exec = require('child_process').exec;
 const execSync = require('child_process').execSync;
 const url = require('url');
 const path = require('path');
@@ -15,13 +14,13 @@ const bach = require('../lib/bAnalysiscorestatus');
 
 
 router.options("/*", function(req, res, next){
-    bUtil.crossDomain;
+    bUtil.crossDomain();
     res.send(200);
 });
 
 /* POST users listing. */
 router.post('/', function(req, res, next) {
-    bUtil.crossDomain;
+    bUtil.crossDomain();
 	// 将url的query查询对象交给params保存
     const params = url.parse(req.url, true).query;
     //定义变量保存获得数据的接口 
@@ -36,42 +35,16 @@ router.post('/', function(req, res, next) {
                 params.type+" "+params.machine+" "+params.min+" "+params.max;
             //执行cmdstr
             console.log("cmd string is:" + cmdstr);
-            bUtil.execute(cmdstr,bplot.plotLineNoX);
-            /*
-            exec(cmdstr, (err, stdout, stderr) =>
-		    {
-                //如果出错 提示python脚本运行错误
-                if(err){
-                    console.log("python script running error:" + stderr);
-                    res.send(stderr);
-                    return;
-                }
-                else {
-                    let plot = bplot.plotLineNoX(stdout);
-                    bres.send(res, plot.data, plot.status);
-                }
-            });	
-            */	
+            bUtil.execute(cmdstr, bplot.plotLineNoX);	
 		    break;
         case "hist":
             api_get_data=path.join(bconst.exedir,"getDataByTime.py");
             cmdstr=bconst.statspython+" "+api_get_data+" "+params.start+" "+params.end+" "
                         +params.type+" "+params.machine+" "+params.min+" "+params.max;
             console.log("cmd string is :"+cmdstr);
-            bUtil.execute(cmdstr,bplot.plotHist);
-           /*
-            exec(cmdstr,(err,stdout,stderr)=>
-            {
-                if(err){
-                    console.log("python script running error:"+stderr);
-                    res.send(stderr);
-                    return;
-                }else{
-                    let plot = bplot.plotHist(stdout, params.amount);
-                    bres.send(res, plot.data, plot.status);
-                }
-            });
-            */
+            let argv = [];
+            argv[0] = params.amount;
+            bUtil.execute(cmdstr, bplot.plotHist, argv);
             break;
         case "any":
             // request body
@@ -155,24 +128,12 @@ router.post('/', function(req, res, next) {
 	}
 });
 
-
 function lineMethod(res, start, end, type, machine, min="", max="") {
     let api_get_data = path.join(bconst.exedir, "getDataByTime.py");
     let cmdstr = bconst.statspython+" "+api_get_data+" "+start+" "+end+" "+
         type+" "+machine+" "+min+" "+max;
     console.log("cmd string is:" + cmdstr);
-    exec(cmdstr, (err, stdout, stderr) =>
-    {
-        if(err){
-            console.log("python script running error:" + stderr);
-            res.send(stderr);
-            return;
-        }
-        else {
-            let plot = bplot.plotLineNoX(stdout);
-            bres.send(res, plot.data, plot.status);
-        }
-    });
+    bUtil.execute(cmdstr, bplot.plotLineNoX);
 }
 
 module.exports = router;

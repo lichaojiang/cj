@@ -53,7 +53,7 @@ app.use(function(err, req, res, next) {
   res.render('error');
 });
 app.all('*', function(req, res, next) {
-    bUtil.crossDomain;
+    bUtil.crossDomain();
   //  console.log("in app.all():"+req.headers.origin);
     next();
 });
