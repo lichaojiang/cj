@@ -19,6 +19,14 @@ elif [ ! -z "$isLinux" ];then
     conda_sh="Miniconda3-latest-Linux-x86_64.sh"
 fi
 
+# export conda path explicitly when in non interactive shell
+if [ ! -z "$isDarwin" ];then
+    source ~/.bash_profile
+elif [ ! -z "$isLinux" ];then
+    conda_path=$(cat ~/.bashrc | grep "conda3/")
+    eval $conda_path
+fi
+
 # 安装miniconda
 isConda="$(which conda | grep 'conda')"
 if [ -z "$isConda" ];then
