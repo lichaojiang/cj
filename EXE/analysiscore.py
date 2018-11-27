@@ -7,3 +7,6 @@ def func():
         import Analysiscore_mac as Analysiscore
 
     return Analysiscore
+
+if __name__ == "__main__":
+    func()
