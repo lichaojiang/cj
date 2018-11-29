@@ -12,13 +12,13 @@ const butil = require('../lib/bUtils');
 //var exedir=(os.type()=="Windows_NT")?
 //            "D:\\bivrost\\git\\BivBackend\\myapp\\EXE\\":"/var/BivBackend/myapp/EXE/";
 router.options("/*", function(req, res, next){
-    butil.crossDomain();
+    butil.crossDomain(req, res);
     res.send(200);
 });
 
 /* POST users listing. */
 router.post('/', function(req, res, next) {
-    butil.crossDomain();
+    butil.crossDomain(req, res);
     var params = url.parse(req.url, true).query;
     let cmdstr, api_bivstats, api_get_data;
 	switch(params.method)
@@ -27,13 +27,13 @@ router.post('/', function(req, res, next) {
             api_bivstats = path.join(bconst.exedir, "stats.py");
             cmdstr = bconst.statspython+" "+api_bivstats+" "+params.start+" "+params.end+" "+params.type+" "+params.machine;
             console.log("cmd string is:"+cmdstr);
-            butil.execute(cmdstr, butil.parseStdout);
+            butil.execute(res, cmdstr, butil.parseStdout);
             break;
         case "getDataByTime":     
             api_get_data = path.join(bconst.exedir, "getDataByTime.py");
             cmdstr = bconst.statspython+" "+api_get_data+" "+params.start+" "+params.end+" "+params.type+" "+params.machine;					
             console.log("cmd string is:"+cmdstr);
-            butil.execute(cmdstr, butil.parseStdout);                                       	    
+            butil.execute(res, cmdstr, butil.parseStdout);                                       	    
 			break;
         default:
 			break;

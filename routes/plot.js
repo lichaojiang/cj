@@ -14,13 +14,13 @@ const bach = require('../lib/bAnalysiscorestatus');
 
 
 router.options("/*", function(req, res, next){
-    bUtil.crossDomain();
+    bUtil.crossDomain(req, res);
     res.send(200);
 });
 
 /* POST users listing. */
 router.post('/', function(req, res, next) {
-    bUtil.crossDomain();
+    bUtil.crossDomain(req, res);
 	// 将url的query查询对象交给params保存
     const params = url.parse(req.url, true).query;
     //定义变量保存获得数据的接口 
@@ -35,7 +35,7 @@ router.post('/', function(req, res, next) {
                 params.type+" "+params.machine+" "+params.min+" "+params.max;
             //执行cmdstr
             console.log("cmd string is:" + cmdstr);
-            bUtil.execute(cmdstr, bplot.plotLineNoX);	
+            bUtil.execute(res, cmdstr, bplot.plotLineNoX);	
 		    break;
         case "hist":
             api_get_data=path.join(bconst.exedir,"getDataByTime.py");
@@ -44,7 +44,7 @@ router.post('/', function(req, res, next) {
             console.log("cmd string is :"+cmdstr);
             let argv = [];
             argv[0] = params.amount;
-            bUtil.execute(cmdstr, bplot.plotHist, argv);
+            bUtil.execute(res, cmdstr, bplot.plotHist, argv);
             break;
         case "any":
             // request body
@@ -133,7 +133,7 @@ function lineMethod(res, start, end, type, machine, min="", max="") {
     let cmdstr = bconst.statspython+" "+api_get_data+" "+start+" "+end+" "+
         type+" "+machine+" "+min+" "+max;
     console.log("cmd string is:" + cmdstr);
-    bUtil.execute(cmdstr, bplot.plotLineNoX);
+    bUtil.execute(res, cmdstr, bplot.plotLineNoX);
 }
 
 module.exports = router;
