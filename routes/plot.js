@@ -102,8 +102,8 @@ router.post('/', function(req, res, next) {
                         let stdout = execSync(cmdstr);
                         let output = bUtil.parseStdout(stdout);
                         // no data or zero division
-                        if (bach.isWARN_NO_DATA(output.status.code) ||
-                            bach.isWARN_ZERODIVISION(output.status.code)) {
+                        if (bach.isWARN_NO_DATA(output.status.errcode) ||
+                            bach.isWARN_ZERODIVISION(output.status.errcode)) {
                             isEmptyInterval = true;
                             continue;
                         }
@@ -114,7 +114,7 @@ router.post('/', function(req, res, next) {
                 }
 
                 let plot = bplot.plotLineWithX(x, y, body.xlabel, body.ylabel, body.title);
-                if (bach.isSTATUSOK(plot.code) && isEmptyInterval === true) {
+                if (bach.isSTATUSOK(plot.errcode) && isEmptyInterval === true) {
                     status = bres.WARN_EMPTY_INTERVAL
                 }
                 else {

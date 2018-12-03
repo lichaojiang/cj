@@ -11,8 +11,11 @@ var datatableRouter = require('./routes/datatable');
 var bivcloudRouter = require('./routes/bivcloud');
 var plotRouter = require('./routes/plot');
 var bUtil=require('./lib/bUtils');
+
+// read .env for database access info
+require('dotenv').config();
+
 var app = express();
-//domain setting
 
 // view engine setup
 app.set('views', path.join(__dirname, 'views'));

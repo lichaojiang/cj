@@ -1,6 +1,11 @@
 # First time setup
+1. Setup minicoda, envs and node
 ```
     npm run setup
+```
+2. Setup database access
+```
+Create a .env file in the project root folder. Refer to .env.default for a list of environment variables that you need to input.
 ```
 
 
@@ -21,7 +26,7 @@
 ```
     npm run dev
 ```
-* setup miniconda
+* Setup miniconda
 ```
     npm run setup
 ```
