@@ -5,20 +5,17 @@ var router = express.Router();
 var exec = require('child_process').exec; 
 var url = require('url');
 const path = require('path');
-const bconst = require('../lib/bConstants');
+const cors = require('cors');
 const butil = require('../lib/bUtils');
+const bconst = require('../lib/bConstants');
 
 /* global var*/
 //var exedir=(os.type()=="Windows_NT")?
 //            "D:\\bivrost\\git\\BivBackend\\myapp\\EXE\\":"/var/BivBackend/myapp/EXE/";
-router.options("/*", function(req, res, next){
-    butil.crossDomain(req, res);
-    res.send(200);
-});
+router.options(" /*", cors(bconst.corsOptions)); 
 
 /* POST users listing. */
-router.post('/', function(req, res, next) {
-    butil.crossDomain(req, res);
+router.post('/', cors(bconst.corsOptions), function(req, res, next) {
     var params = url.parse(req.url, true).query;
     let cmdstr, api_bivstats, api_get_data;
 	switch(params.method)

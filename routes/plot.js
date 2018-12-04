@@ -6,6 +6,7 @@ const execSync = require('child_process').execSync;
 const url = require('url');
 const path = require('path');
 const moment = require('moment');
+const cors = require('cors');
 const bconst = require('../lib/bConstants');
 const bplot = require('../lib/bPlotlib');
 const bres = require('../lib/bResponse');
@@ -13,14 +14,10 @@ const bUtil = require('../lib/bUtils');
 const bach = require('../lib/bAnalysiscorestatus');
 
 
-router.options("/*", function(req, res, next){
-    bUtil.crossDomain(req, res);
-    res.send(200);
-});
+router.options(" /*", cors(bconst.corsOptions)); 
 
 /* POST users listing. */
-router.post('/', function(req, res, next) {
-    bUtil.crossDomain(req, res);
+router.post('/', cors(bconst.corsOptions), function(req, res, next) {
 	// 将url的query查询对象交给params保存
     const params = url.parse(req.url, true).query;
     //定义变量保存获得数据的接口 

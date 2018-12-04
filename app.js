@@ -3,6 +3,7 @@ var express = require('express');
 var path = require('path');
 var cookieParser = require('cookie-parser');
 var logger = require('morgan');
+var cors = require('cors');
 //var bodyParser = require('body-parser');
 
 var indexRouter = require('./routes/index');
@@ -10,7 +11,7 @@ var usersRouter = require('./routes/users');
 var datatableRouter = require('./routes/datatable');
 var bivcloudRouter = require('./routes/bivcloud');
 var plotRouter = require('./routes/plot');
-var bUtil=require('./lib/bUtils');
+var bconst = require('./lib/bConstants');
 
 // read .env for database access info
 require('dotenv').config();
@@ -55,9 +56,9 @@ app.use(function(err, req, res, next) {
   res.status(err.status || 500);
   res.render('error');
 });
-app.all('*', function(req, res, next) {
-    bUtil.crossDomain();
-  //  console.log("in app.all():"+req.headers.origin);
+
+app.all('*', cors(bconst.corsOptions), function(req, res, next) {
     next();
 });
+
 module.exports = app;
