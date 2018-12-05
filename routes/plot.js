@@ -22,7 +22,7 @@ router.post('/', cors(bconst.corsOptions), function(req, res, next) {
     const params = url.parse(req.url, true).query;
     //定义变量保存获得数据的接口 
     let api_get_data, cmdstr;
-
+    let argv = [];
 	switch(params.method)
 	{
         case "line":
@@ -32,15 +32,15 @@ router.post('/', cors(bconst.corsOptions), function(req, res, next) {
                 params.type+" "+params.machine+" "+params.min+" "+params.max;
             //执行cmdstr
             console.log("cmd string is:" + cmdstr);
-            bUtil.execute(res, cmdstr, bplot.plotLineNoX);	
+            argv = [req.body.xlabel, req.body.ylabel, req.body.title];
+            bUtil.execute(res, cmdstr, bplot.plotLineNoX, argv);	
 		    break;
         case "hist":
             api_get_data=path.join(bconst.exedir,"getDataByTime.py");
             cmdstr=bconst.statspython+" "+api_get_data+" "+params.start+" "+params.end+" "
                         +params.type+" "+params.machine+" "+params.min+" "+params.max;
             console.log("cmd string is :"+cmdstr);
-            let argv = [];
-            argv[0] = params.amount;
+            argv = [params.amount];
             bUtil.execute(res, cmdstr, bplot.plotHist, argv);
             break;
         case "any":
@@ -65,7 +65,7 @@ router.post('/', cors(bconst.corsOptions), function(req, res, next) {
             if (body.getdata !== null && typeof body.getdata != 'undefined') {
                 let min = body.getdata[3] || 0;
                 let max = body.getdata[4] || 1000000;
-                lineMethod(res, body.getdata[0], body.getdata[1], body.getdata[2], body.machine, min, max)
+                lineMethod(req, res, body.getdata[0], body.getdata[1], body.getdata[2], body.machine, min, max)
             }
             else {
                 let x = [];
@@ -125,12 +125,13 @@ router.post('/', cors(bconst.corsOptions), function(req, res, next) {
 	}
 });
 
-function lineMethod(res, start, end, type, machine, min="", max="") {
+function lineMethod(req, res, start, end, type, machine, min="", max="") {
     let api_get_data = path.join(bconst.exedir, "getDataByTime.py");
     let cmdstr = bconst.statspython+" "+api_get_data+" "+start+" "+end+" "+
         type+" "+machine+" "+min+" "+max;
+    let argv = [req.body.xlabel, req.body.ylabel, req.body.title];
     console.log("cmd string is:" + cmdstr);
-    bUtil.execute(res, cmdstr, bplot.plotLineNoX);
+    bUtil.execute(res, cmdstr, bplot.plotLineNoX, argv);
 }
 
 module.exports = router;

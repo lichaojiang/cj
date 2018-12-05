@@ -15,7 +15,6 @@ const bconst = require('../lib/bConstants');
 router.options("/*", cors(bconst.corsOptions)); 
 
 /* POST users listing. */
-console.log(bconst.corsOptions)
 router.post('/', cors(bconst.corsOptions), function(req, res, next) {
     var params = url.parse(req.url, true).query;
     let cmdstr, api_bivstats, api_get_data;
