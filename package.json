@@ -10,7 +10,8 @@
     "setup": "./scripts/setup.sh",
     "rstart": "./scripts/remote.sh start",
     "rstop": "./scripts/remote.sh stop",
-    "rrestart": "./scripts/remote.sh restart"
+    "rrestart": "./scripts/remote.sh restart",
+    "rsetup": "./scripts/remote.sh setup"
   },
   "dependencies": {
     "cookie-parser": "~1.4.3",
