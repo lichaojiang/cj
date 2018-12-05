@@ -12,9 +12,10 @@ const bconst = require('../lib/bConstants');
 /* global var*/
 //var exedir=(os.type()=="Windows_NT")?
 //            "D:\\bivrost\\git\\BivBackend\\myapp\\EXE\\":"/var/BivBackend/myapp/EXE/";
-router.options(" /*", cors(bconst.corsOptions)); 
+router.options("/*", cors(bconst.corsOptions)); 
 
 /* POST users listing. */
+console.log(bconst.corsOptions)
 router.post('/', cors(bconst.corsOptions), function(req, res, next) {
     var params = url.parse(req.url, true).query;
     let cmdstr, api_bivstats, api_get_data;

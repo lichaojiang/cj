@@ -14,7 +14,7 @@ const bUtil = require('../lib/bUtils');
 const bach = require('../lib/bAnalysiscorestatus');
 
 
-router.options(" /*", cors(bconst.corsOptions)); 
+router.options("/*", cors(bconst.corsOptions)); 
 
 /* POST users listing. */
 router.post('/', cors(bconst.corsOptions), function(req, res, next) {
