@@ -4,6 +4,7 @@ var path = require('path');
 var cookieParser = require('cookie-parser');
 var logger = require('morgan');
 var cors = require('cors');
+var bconst = require('./lib/bConstants');
 //var bodyParser = require('body-parser');
 
 var indexRouter = require('./routes/index');
@@ -11,7 +12,7 @@ var usersRouter = require('./routes/users');
 var datatableRouter = require('./routes/datatable');
 var bivcloudRouter = require('./routes/bivcloud');
 var plotRouter = require('./routes/plot');
-var bconst = require('./lib/bConstants');
+var productionRouter = require('./routes/production');
 
 // read .env for database access info
 require('dotenv').config();
@@ -34,6 +35,7 @@ app.use('/users', usersRouter);
 app.use('/datatable', datatableRouter);
 app.use('/apps', bivcloudRouter);
 app.use('/plot', plotRouter);
+app.use('/production', productionRouter);
 
 //??
 app.get('/orange', function(req, res, next) {
