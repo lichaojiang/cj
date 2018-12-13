@@ -19,7 +19,7 @@ router.post('/plan', cors(bconst.corsOptions), function(req, res, next) {
     {
         case "create":
             planObj.create(req.body.plan).then(() => {
-                sqlObj.end();
+                return sqlObj.end();
             }).then(() => {
                 bres.send(res, 'Plan created.', bres.status_OK);
             }).catch(err => {
@@ -30,10 +30,13 @@ router.post('/plan', cors(bconst.corsOptions), function(req, res, next) {
             break;
         case "read":
             let limit = req.body.plan.limit || 10;
-            planObj.read(limit).then(() => {
-                sqlObj.end()
-            }).then(resolvedResults => {
-                bres.send(res, resolvedResults, bres.status_OK);
+            let page = req.body.plan.page || 1;
+            let results = {};
+            planObj.read(limit, page).then((resolvedResults) => {
+                results = resolvedResults;
+                return sqlObj.end();
+            }).then(() => {
+                bres.send(res, results, bres.status_OK);
             }).catch(err => {
                 let err_status = bres.findStatus(err);
                 console.log(err + '\n' + JSON.stringify(err_status));
@@ -46,14 +49,13 @@ router.post('/plan', cors(bconst.corsOptions), function(req, res, next) {
                 bres.send(res, null, bres.ERR_SQL_ID);
             }
             else {
-                let new_items = req.body.plan.new_items;
-                planObj.update(id, new_items).then(() => {
-                    sqlObj.end();
+                planObj.update(req.body.plan).then(() => {
+                    return sqlObj.end();
                 }).then(() => {
                     bres.send(res, 'Plan updated.', bres.status_OK);
                 }).catch(err => {
                     let err_status = bres.findStatus(err);
-                    console.log(err + '\n' + JSON.stringify(err_status));
+                    console.log(JSON.stringify(err_status) + '\n' + err.stack);
                     bres.send(res, null, err_status);
                 });
             }
@@ -65,7 +67,7 @@ router.post('/plan', cors(bconst.corsOptions), function(req, res, next) {
             }
             else {
                 planObj.delete(id).then(() => {
-                    sqlObj.end();
+                    return sqlObj.end();
                 }).then(() => {
                     bres.send(res, 'Plan deleted.', bres.status_OK);
                 }).catch(err => {
