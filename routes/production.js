@@ -42,7 +42,7 @@ router.get('/plan/read', cors(bconst.corsOptions), (req, res, next) => {
     });
 })
 
-router.put('/plan/update', cors(bconst.corsOptions), (req, res, next) => {
+router.post('/plan/update', cors(bconst.corsOptions), (req, res, next) => {
     let sqlObj = new bDb.sql(res);
     let planObj = new bProd.plan(sqlObj, "productionplan");
     let id = req.body.plan.id;
@@ -62,7 +62,7 @@ router.put('/plan/update', cors(bconst.corsOptions), (req, res, next) => {
     }
 })
 
-router.delete('/plan/delete', cors(bconst.corsOptions), (req, res, next) => {
+router.post('/plan/delete', cors(bconst.corsOptions), (req, res, next) => {
     let sqlObj = new bDb.sql(res);
     let planObj = new bProd.plan(sqlObj, "productionplan");
     let id_arr = req.body.plan.id;
