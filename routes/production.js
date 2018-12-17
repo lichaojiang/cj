@@ -42,11 +42,7 @@ router.post('/plan', cors(bconst.corsOptions), (req, res, next) => {
             });
             break;
         case "update":
-<<<<<<< HEAD
-            let id = req.body.plan.id;
-=======
             let id = req.body.query.id;
->>>>>>> production_two
             if (typeof id !== 'number') {
                 bres.send(res, null, bres.ERR_SQL_ID);
             }
@@ -63,11 +59,7 @@ router.post('/plan', cors(bconst.corsOptions), (req, res, next) => {
             }
             break;
         case "delete":
-<<<<<<< HEAD
-            let id_arr = req.body.plan.id;
-=======
             let id_arr = req.body.query.id;
->>>>>>> production_two
             planObj.delete(id_arr).then(() => {
                 return sqlObj.end();
             }).then(() => {
@@ -77,8 +69,6 @@ router.post('/plan', cors(bconst.corsOptions), (req, res, next) => {
                 console.log(err + '\n' + JSON.stringify(err_status));
                 bres.send(res, null, err_status);
             });
-<<<<<<< HEAD
-=======
             break;
         default:
 		    break;
@@ -197,7 +187,6 @@ router.post('/group', cors(bconst.corsOptions), (req, res, next) => {
                     bres.send(res, null, err_status);
                 });
             }
->>>>>>> production_two
             break;
         case "delete":
             let id_arr = req.body.query.id;
