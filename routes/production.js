@@ -14,7 +14,6 @@ router.options(" /*", cors(bconst.corsOptions));
 router.post('/plan', cors(bconst.corsOptions), function(req, res, next) {
     let sqlObj = new bDb.sql(res);
     let planObj = new bProd.plan(sqlObj, "productionplan");
-    let id;
     switch(req.body.method)
     {
         case "create":
@@ -44,7 +43,7 @@ router.post('/plan', cors(bconst.corsOptions), function(req, res, next) {
             });
             break;
         case "update":
-            id = req.body.plan.id;
+            let id = req.body.plan.id;
             if (typeof id !== 'number') {
                 bres.send(res, null, bres.ERR_SQL_ID);
             }
@@ -61,21 +60,17 @@ router.post('/plan', cors(bconst.corsOptions), function(req, res, next) {
             }
             break;
         case "delete":
-            id = req.body.plan.id;
-            if (typeof id !== 'number') {
-                bres.send(res, null, bres.ERR_SQL_ID);
-            }
-            else {
-                planObj.delete(id).then(() => {
-                    return sqlObj.end();
-                }).then(() => {
-                    bres.send(res, 'Plan deleted.', bres.status_OK);
-                }).catch(err => {
-                    let err_status = bres.findStatus(err);
-                    console.log(err + '\n' + JSON.stringify(err_status));
-                    bres.send(res, null, err_status);
-                });
-            }
+            let id_arr = req.body.plan.id;
+
+            planObj.delete(id_arr).then(() => {
+                return sqlObj.end();
+            }).then(() => {
+                bres.send(res, 'Plan deleted.', bres.status_OK);
+            }).catch(err => {
+                let err_status = bres.findStatus(err);
+                console.log(err + '\n' + JSON.stringify(err_status));
+                bres.send(res, null, err_status);
+            });
             break;
         default:
 		    break;

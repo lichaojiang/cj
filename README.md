@@ -7,6 +7,7 @@
 ```
 Create a .env file in the project root folder. Refer to .env.default for a list of environment variables that you need to input.
 ```
+3. Create a .env file following the example of .env.default
 
 
 # npm commands
