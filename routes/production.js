@@ -75,6 +75,15 @@ router.post('/plan', cors(bconst.corsOptions), (req, res, next) => {
     }
 })
 
+
+router.get('/plan/status', (req, res, next) => {
+    let data = {};
+    data.planStatus = bconst.planStatus;
+    data.showFields = bconst.planStatusShowFields_cn;
+    bres.send(res, data, bres.status_OK);
+})
+
+
 router.post('/product', cors(bconst.corsOptions), (req, res, next) => {
     let sqlObj = new bDb.sql(res);
     let productObj = new bProd.product(sqlObj, "product");
