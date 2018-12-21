@@ -22,8 +22,9 @@ router.post('/plan', cors(bconst.corsOptions), (req, res, next) => {
                 bres.send(res, 'Plan created.', bres.status_OK);
             }).catch(err => {
                 let err_status = bres.findStatus(err);
+                let data = planObj.getDataFromStatus(err_status);
                 console.log(err + '\n' + JSON.stringify(err_status));
-                bres.send(res, null, err_status);
+                bres.send(res, data, err_status);
             });
             break;
         case "read":
@@ -37,8 +38,9 @@ router.post('/plan', cors(bconst.corsOptions), (req, res, next) => {
                 bres.send(res, results, bres.status_OK);
             }).catch(err => {
                 let err_status = bres.findStatus(err);
+                let data = planObj.getDataFromStatus(err_status);
                 console.log(err + '\n' + JSON.stringify(err_status));
-                bres.send(res, null, err_status);
+                bres.send(res, data, err_status);
             });
             break;
         case "update":
@@ -53,8 +55,9 @@ router.post('/plan', cors(bconst.corsOptions), (req, res, next) => {
                     bres.send(res, 'Plan updated.', bres.status_OK);
                 }).catch(err => {
                     let err_status = bres.findStatus(err);
+                    let data = planObj.getDataFromStatus(err_status);
                     console.log(JSON.stringify(err_status) + '\n' + err.stack);
-                    bres.send(res, null, err_status);
+                    bres.send(res, data, err_status);
                 });
             }
             break;
@@ -66,8 +69,9 @@ router.post('/plan', cors(bconst.corsOptions), (req, res, next) => {
                 bres.send(res, 'Plan deleted.', bres.status_OK);
             }).catch(err => {
                 let err_status = bres.findStatus(err);
+                let data = planObj.getDataFromStatus(err_status);
                 console.log(err + '\n' + JSON.stringify(err_status));
-                bres.send(res, null, err_status);
+                bres.send(res, data, err_status);
             });
             break;
         default:
@@ -96,8 +100,9 @@ router.post('/product', cors(bconst.corsOptions), (req, res, next) => {
                 bres.send(res, 'product created.', bres.status_OK);
             }).catch(err => {
                 let err_status = bres.findStatus(err);
+                let data = productObj.getDataFromStatus(err_status);
                 console.log(err + '\n' + JSON.stringify(err_status));
-                bres.send(res, null, err_status);
+                bres.send(res, data, err_status);
             });
             break;
         case "read":
@@ -111,8 +116,9 @@ router.post('/product', cors(bconst.corsOptions), (req, res, next) => {
                 bres.send(res, results, bres.status_OK);
             }).catch(err => {
                 let err_status = bres.findStatus(err);
+                let data = productObj.getDataFromStatus(err_status);
                 console.log(err + '\n' + JSON.stringify(err_status));
-                bres.send(res, null, err_status);
+                bres.send(res, data, err_status);
             });
             break;
         case "update":
@@ -127,8 +133,9 @@ router.post('/product', cors(bconst.corsOptions), (req, res, next) => {
                     bres.send(res, 'product updated.', bres.status_OK);
                 }).catch(err => {
                     let err_status = bres.findStatus(err);
+                    let data = productObj.getDataFromStatus(err_status);
                     console.log(JSON.stringify(err_status) + '\n' + err.stack);
-                    bres.send(res, null, err_status);
+                    bres.send(res, data, err_status);
                 });
             }
             break;
@@ -140,8 +147,9 @@ router.post('/product', cors(bconst.corsOptions), (req, res, next) => {
                 bres.send(res, 'product deleted.', bres.status_OK);
             }).catch(err => {
                 let err_status = bres.findStatus(err);
+                let data = productObj.getDataFromStatus(err_status);
                 console.log(err + '\n' + JSON.stringify(err_status));
-                bres.send(res, null, err_status);
+                bres.send(res, data, err_status);
             });
             break;
         default:
@@ -161,8 +169,9 @@ router.post('/group', cors(bconst.corsOptions), (req, res, next) => {
                 bres.send(res, 'group created.', bres.status_OK);
             }).catch(err => {
                 let err_status = bres.findStatus(err);
+                let data = productObj.getDataFromStatus(err_status);
                 console.log(err + '\n' + JSON.stringify(err_status));
-                bres.send(res, null, err_status);
+                bres.send(res, data, err_status);
             });
             break;
         case "read":
@@ -176,8 +185,9 @@ router.post('/group', cors(bconst.corsOptions), (req, res, next) => {
                 bres.send(res, results, bres.status_OK);
             }).catch(err => {
                 let err_status = bres.findStatus(err);
+                let data = productObj.getDataFromStatus(err_status);
                 console.log(err + '\n' + JSON.stringify(err_status));
-                bres.send(res, null, err_status);
+                bres.send(res, data, err_status);
             });
             break;
         case "update":
@@ -192,8 +202,9 @@ router.post('/group', cors(bconst.corsOptions), (req, res, next) => {
                     bres.send(res, 'group updated.', bres.status_OK);
                 }).catch(err => {
                     let err_status = bres.findStatus(err);
+                    let data = productObj.getDataFromStatus(err_status);
                     console.log(JSON.stringify(err_status) + '\n' + err.stack);
-                    bres.send(res, null, err_status);
+                    bres.send(res, data, err_status);
                 });
             }
             break;
@@ -205,8 +216,9 @@ router.post('/group', cors(bconst.corsOptions), (req, res, next) => {
                 bres.send(res, 'group deleted.', bres.status_OK);
             }).catch(err => {
                 let err_status = bres.findStatus(err);
+                let data = productObj.getDataFromStatus(err_status);
                 console.log(err + '\n' + JSON.stringify(err_status));
-                bres.send(res, null, err_status);
+                bres.send(res, data, err_status);
             });
             break;
         default:
