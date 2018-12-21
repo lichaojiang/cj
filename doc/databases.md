@@ -1,14 +1,40 @@
 <img src=".dbrelation.jpg" width="50%">
 
-# productionstatus
+# organization
 ```sql
-    CREATE TABLE productionstatus (
-        id SMALLINT NOT NULL AUTO_INCREMENT,
-        status VARCHAR(255) NOT NULL,
+    CREATE TABLE organization (
+        id MEDIUMINT NOT NULL AUTO_INCREMENT,
+        name VARCHAR(255) NOT NULL,
+        included_tables TEXT NOT NULL,
+        created_at TIMESTAMP NULL DEFAULT CURRENT_TIMESTAMP,
+        updated_at TIMESTAMP NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
         PRIMARY KEY (id),
-        UNIQUE KEY (status)
+        UNIQUE KEY (name)
     ) CHARACTER SET = utf8;
-    INSERT INTO productionstatus (id, status) VALUES (null, 'waiting'), (null, 'working'), (null, 'complete'), (null, 'delayed');
+    INSERT INTO organization (name, included_tables) VALUES ('test', '["productgroup", "product", "plan"]');
+```
+
+
+# user
+```sql
+    CREATE TABLE user (
+        id MEDIUMINT NOT NULL AUTO_INCREMENT,
+        email VARCHAR(255) NOT NULL,
+        name VARCHAR(255) NOT NULL,
+        password VARCHAR(255) NOT NULL,
+        orgainization_id MEDIUMINT NOT NULL,
+        nickname VARCHAR(255),
+        phone VARCHAR(255),
+        gender VARCHAR(255),
+        privilege VARCHAR(255),
+        department VARCHAR(255),
+        role VARCHAR(255),
+        created_at TIMESTAMP NULL DEFAULT CURRENT_TIMESTAMP,
+        updated_at TIMESTAMP NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+        PRIMARY KEY (id),
+        UNIQUE KEY (email),
+        FOREIGN KEY (orgainization_id) REFERENCES organization(id)
+    ) CHARACTER SET = utf8;
 ```
 
 # productgroup
@@ -49,14 +75,14 @@
         quantity INT NOT NULL,
         begin DATE NOT NULL,
         end DATE NOT NULL,
-        assignee VARCHAR(32) NOT NULL,
-        status_id SMALLINT NOT NULL,
+        assignee_id MEDIUMINT(32) NOT NULL,
+        status VARCHAR(255) NOT NULL,
         note TEXT,
         created_at TIMESTAMP NULL DEFAULT CURRENT_TIMESTAMP,
         updated_at TIMESTAMP NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
         PRIMARY KEY (id),
         UNIQUE KEY(code),
         FOREIGN KEY (product_id) REFERENCES product(id),
-        FOREIGN KEY (status_id) REFERENCES productionstatus(id)
+        FOREIGN KEY (assignee_id) REFERENCES user(id)
     ) CHARACTER SET = utf8;
 ```
