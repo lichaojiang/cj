@@ -8,11 +8,18 @@ var bconst = require('./lib/bConstants');
 //var bodyParser = require('body-parser');
 
 var indexRouter = require('./routes/index');
-var usersRouter = require('./routes/users');
+var userRouter = require('./routes/user');
 var datatableRouter = require('./routes/datatable');
 var bivcloudRouter = require('./routes/bivcloud');
 var plotRouter = require('./routes/plot');
 var productionRouter = require('./routes/production');
+
+// authtification packages
+var expressValidator = require('express-validator');
+var session = require('express-session');
+var mySqlStore = require('express-mysql-session')(session);
+var passport = require('passport');
+var LocalStrategy = require('passport-local').Strategy;
 
 // read .env for database access info
 require('dotenv').config();
@@ -27,21 +34,50 @@ app.use(logger('dev'));
 app.use(express.json());
 app.use(express.urlencoded({ extended: false }));
 app.use(cookieParser());
+app.use(expressValidator());
 //app.use(express.static(path.join(__dirname, 'public')));
 app.use(express.static(__dirname + '/public/companyweb', {dotfiles:'allow'}));//设置静态文件目录
 app.use(express.static(__dirname + '/public/apps/Bivcloud', {dotfiles:'allow'}));//设置静态文件目录
+
+// session
+var options =  {
+  host            : 'admin.bivrost.cn',
+  user            : process.env.DB_USER,
+  password        : process.env.DB_PASSWORD,
+  database        : 'bivcloud',
+  port            : '3306'
+};
+
+var sessionStore = new mySqlStore(options);
+
+app.use(session({
+  secret: 'biv',
+  resave: true,
+  store: sessionStore,
+  saveUninitialized: false // don't use session for users not logging in 
+  // cookie: { secure: true } this setting is for https
+}))
+app.use(passport.initialize());
+app.use(passport.session());
+
+passport.use(new LocalStrategy(
+  function(username, password, done) {
+    User.findOne({ username: username }, function (err, user) {
+      if (err) { return done(err); }
+      if (!user) { return done(null, false); }
+      if (!user.verifyPassword(password)) { return done(null, false); }
+      return done(null, user);
+    });
+  }
+));
+
+// routes
 app.use('/', indexRouter);
-app.use('/users', usersRouter);
+app.use('/user', userRouter);
 app.use('/datatable', datatableRouter);
 app.use('/apps', bivcloudRouter);
 app.use('/plot', plotRouter);
 app.use('/production', productionRouter);
-
-//??
-app.get('/orange', function(req, res, next) {
-    res.sendfile(__dirname + "/public/apps/Bivcloud/th.jpeg");
-});
-//??
 
 // catch 404 and forward to error handler
 app.use(function(req, res, next) {

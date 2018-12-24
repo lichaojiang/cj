@@ -22,7 +22,7 @@
         email VARCHAR(255) NOT NULL,
         name VARCHAR(255) NOT NULL,
         password VARCHAR(255) NOT NULL,
-        orgainization_id MEDIUMINT NOT NULL,
+        organization_id MEDIUMINT NOT NULL,
         nickname VARCHAR(255),
         phone VARCHAR(255),
         gender VARCHAR(255),
@@ -33,7 +33,7 @@
         updated_at TIMESTAMP NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
         PRIMARY KEY (id),
         UNIQUE KEY (email),
-        FOREIGN KEY (orgainization_id) REFERENCES organization(id)
+        FOREIGN KEY (organization_id) REFERENCES organization(id)
     ) CHARACTER SET = utf8;
 ```
 
