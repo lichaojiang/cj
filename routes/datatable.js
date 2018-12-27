@@ -8,6 +8,7 @@ const path = require('path');
 const cors = require('cors');
 const butil = require('../lib/bUtils');
 const bconst = require('../lib/bConstants');
+const bauth = require('../lib/bUtils').userAuth;
 
 /* global var*/
 //var exedir=(os.type()=="Windows_NT")?
@@ -15,7 +16,7 @@ const bconst = require('../lib/bConstants');
 router.options("/*", cors(bconst.corsOptions)); 
 
 /* POST users listing. */
-router.post('/', cors(bconst.corsOptions), function(req, res, next) {
+router.post('/', cors(bconst.corsOptions), bauth(), function(req, res, next) {
     var params = url.parse(req.url, true).query;
     let cmdstr, api_bivstats, api_get_data;
 	switch(params.method)

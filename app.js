@@ -41,35 +41,24 @@ app.use(express.static(__dirname + '/public/apps/Bivcloud', {dotfiles:'allow'}))
 
 // session
 var options =  {
-  host            : 'admin.bivrost.cn',
-  user            : process.env.DB_USER,
-  password        : process.env.DB_PASSWORD,
-  database        : 'bivcloud',
-  port            : '3306'
+    host            : 'admin.bivrost.cn',
+    user            : process.env.DB_USER,
+    password        : process.env.DB_PASSWORD,
+    database        : 'bivcloud',
+    port            : '3306'
 };
 
 var sessionStore = new mySqlStore(options);
 
 app.use(session({
-  secret: 'biv',
-  resave: true,
-  store: sessionStore,
-  saveUninitialized: false // don't use session for users not logging in 
-  // cookie: { secure: true } this setting is for https
+    secret: process.env.SESSION_SECRET,
+    resave: true,
+    store: sessionStore,
+    saveUninitialized: false // don't use session for users not logging in 
+    // cookie: { secure: true } this setting is for https
 }))
 app.use(passport.initialize());
 app.use(passport.session());
-
-passport.use(new LocalStrategy(
-  function(username, password, done) {
-    User.findOne({ username: username }, function (err, user) {
-      if (err) { return done(err); }
-      if (!user) { return done(null, false); }
-      if (!user.verifyPassword(password)) { return done(null, false); }
-      return done(null, user);
-    });
-  }
-));
 
 // routes
 app.use('/', indexRouter);
@@ -79,20 +68,29 @@ app.use('/apps', bivcloudRouter);
 app.use('/plot', plotRouter);
 app.use('/production', productionRouter);
 
+passport.use(new LocalStrategy({usernameField: 'email', passwordField: 'password'}, (username, password, done) => {
+    const sql = require('./lib/bDatabaselib').sql;
+    const user = require('./lib/bUser');
+    let userObj = new user(new sql(), 'user');
+    userObj.verifyUser(username, password, done).catch(err => {
+        console.log(err);
+    })
+}));
+
 // catch 404 and forward to error handler
 app.use(function(req, res, next) {
-  next(createError(404));
+    next(createError(404));
 });
 
 // error handler
 app.use(function(err, req, res, next) {
-  // set locals, only providing error in development
-  res.locals.message = err.message;
-  res.locals.error = req.app.get('env') === 'development' ? err : {};
+    // set locals, only providing error in development
+    res.locals.message = err.message;
+    res.locals.error = req.app.get('env') === 'development' ? err : {};
 
-  // render the error page
-  res.status(err.status || 500);
-  res.render('error');
+    // render the error page
+    res.status(err.status || 500);
+    res.render('error');
 });
 
 app.all('*', cors(bconst.corsOptions), function(req, res, next) {
