@@ -28,13 +28,13 @@ router.get('/logout', cors(bconst.corsOptions), (req, res) => {
 
 // login success
 router.get('/success', cors(bconst.corsOptions), (req, res) => {
-    res.send({admin: {
+    res.send({
         roles: ['admin'],
         token: 'admin',
         introduction: '我是超级管理员',
         avatar: 'https://wpimg.wallstcn.com/f778738c-e4f8-4870-b634-56703b4acafe.gif',
         name: 'Super Admin'
-      }});
+      });
 })
 
 // login failure
