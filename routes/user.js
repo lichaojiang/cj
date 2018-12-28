@@ -4,19 +4,15 @@ const cors = require('cors');
 const passport =require('passport');
 
 const bconst = require('../lib/bConstants');
-const buser = require('../lib/bUser');
-const bcrud = require('../lib/bCrudlib');
-const bauth = require('../lib/bUtils').userAuth;
+const user = require('../lib/bUser').user;
+const crud = require('../lib/bCrudlib');
+
+const auth = require('../lib/bUtils').userAuth;
 
 router.options("/*", cors(bconst.corsOptions)); 
 
-/* GET users listing. */
-router.get('/', function(req, res, next) {
-    res.send('respond with a resource');
-});
-
 // user route
-router.post('/', cors(bconst.corsOptions), bauth(), bcrud({tableName: 'user', tableClass: buser}));
+router.post('/', cors(bconst.corsOptions), auth(), crud({tableName: 'user', tableClass: user}));
 
 // login route
 router.post('/login', passport.authenticate('local', {

@@ -6,17 +6,17 @@ const router = express.Router();
 
 const bconst = require('../lib/bConstants');
 const bres = require('../lib/bResponse');
-const bcrud = require('../lib/bCrudlib')
+const crud = require('../lib/bCrudlib');
 const plan = require('../lib/bProduction').plan;
 const product = require('../lib/bProduction').product;
 const group = require('../lib/bProduction').group;
-const bauth = require('../lib/bUtils').userAuth;
+const auth = require('../lib/bUtils').userAuth;
 
 
 router.options("/*", cors(bconst.corsOptions));
 
 // plan
-router.post('/plan', cors(bconst.corsOptions), bauth(), bcrud({tableName: 'productionplan', tableClass: plan}));
+router.post('/plan', cors(bconst.corsOptions), auth(), crud({tableName: 'productionplan', tableClass: plan}));
 
 router.get('/plan/status', (req, res, next) => {
     let data = {};
@@ -26,9 +26,9 @@ router.get('/plan/status', (req, res, next) => {
 })
 
 // product
-router.post('/product', cors(bconst.corsOptions), bauth(), bcrud({tableName: 'product', tableClass: product}));
+router.post('/product', cors(bconst.corsOptions), auth(), crud({tableName: 'product', tableClass: product}));
 
 // group
-router.post('/group', cors(bconst.corsOptions), bauth(), bcrud({tableName: 'productgroup', tableClass: group}));
+router.post('/group', cors(bconst.corsOptions), auth(), crud({tableName: 'productgroup', tableClass: group}));
 
 module.exports = router;

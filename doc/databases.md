@@ -71,6 +71,7 @@
     CREATE TABLE productionplan (
         id MEDIUMINT NOT NULL AUTO_INCREMENT,
         code VARCHAR(255),
+        title VARCHAR(255) NOT NULL,
         product_id MEDIUMINT NOT NULL,
         quantity INT NOT NULL,
         begin DATE NOT NULL,
@@ -84,5 +85,18 @@
         UNIQUE KEY(code),
         FOREIGN KEY (product_id) REFERENCES product(id),
         FOREIGN KEY (assignee_id) REFERENCES user(id)
+    ) CHARACTER SET = utf8;
+```
+
+# chartdata
+```sql
+    CREATE TABLE chartdata (
+        id MEDIUMINT NOT NULL AUTO_INCREMENT,
+        user_id MEDIUMINT NOT NULL,
+        data TEXT NOT NULL,
+        created_at TIMESTAMP NULL DEFAULT CURRENT_TIMESTAMP,
+        updated_at TIMESTAMP NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+        PRIMARY KEY (id),
+        FOREIGN KEY (user_id) REFERENCES user(id)
     ) CHARACTER SET = utf8;
 ```

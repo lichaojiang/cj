@@ -13,6 +13,7 @@ var datatableRouter = require('./routes/datatable');
 var bivcloudRouter = require('./routes/bivcloud');
 var plotRouter = require('./routes/plot');
 var productionRouter = require('./routes/production');
+var chartDataRounter = require('./routes/chartdata');
 
 // authtification packages
 var expressValidator = require('express-validator');
@@ -44,7 +45,7 @@ var options =  {
     host            : 'admin.bivrost.cn',
     user            : process.env.DB_USER,
     password        : process.env.DB_PASSWORD,
-    database        : 'bivcloud',
+    database        : process.env.DB,
     port            : '3306'
 };
 
@@ -67,13 +68,15 @@ app.use('/datatable', datatableRouter);
 app.use('/apps', bivcloudRouter);
 app.use('/plot', plotRouter);
 app.use('/production', productionRouter);
+app.use('/chartdata', chartDataRounter);
 
 passport.use(new LocalStrategy({usernameField: 'email', passwordField: 'password'}, (username, password, done) => {
-    const sql = require('./lib/bDatabaselib').sql;
-    const user = require('./lib/bUser');
-    let userObj = new user(new sql(), 'user');
+    const user = require('./lib/bUser').user;
+    let userObj = new user('user');
     userObj.verifyUser(username, password, done).catch(err => {
         console.log(err);
+    }).then(() => {
+        userObj.endSql();
     })
 }));
 
