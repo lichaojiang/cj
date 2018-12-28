@@ -70,7 +70,7 @@ app.use('/plot', plotRouter);
 app.use('/production', productionRouter);
 app.use('/chartdata', chartDataRounter);
 
-passport.use(new LocalStrategy({usernameField: 'email', passwordField: 'password'}, (username, password, done) => {
+passport.use(new LocalStrategy((username, password, done) => {
     const user = require('./lib/bUser').user;
     let userObj = new user('user');
     userObj.verifyUser(username, password, done).catch(err => {
