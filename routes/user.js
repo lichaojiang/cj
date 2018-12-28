@@ -15,9 +15,9 @@ router.options("/*", cors(bconst.corsOptions));
 router.post('/', cors(bconst.corsOptions), auth(), crud({tableName: 'user', tableClass: user}));
 
 // login route
-router.post('/login', passport.authenticate('local', {
-    successMessage: 'success',
-    failureMessage: 'failure'
+router.post('/login', cors(bconst.corsOptions), passport.authenticate('local', {
+    successRedirect: '/user/success',
+    failureRedirect: '/user/failure'
 }));
 
 // logout route
