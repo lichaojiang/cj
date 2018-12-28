@@ -1,14 +1,18 @@
 #!/bin/bash
-if [ "$2" == "start" ];then
+if [ "$1" == "start" ];then
     echo -n "Remote server user name:"
     read user
-    ssh "${user}@admin.bivrost.cn" "cd /var/bivServer/ && git pull && npm install && npm run setup && npm run start"
-elif [ "$2" == "stop" ];then
+    ssh "${user}@admin.bivrost.cn" "cd /var/bivServer/ && git fetch && git reset --hard origin/master && npm install && npm run start"
+elif [ "$1" == "stop" ];then
     echo -n "Remote server user name:"
     read user
-    ssh "${user}@admin.bivrost.cn" "cd /var/bivServer/ && git pull && npm install && npm run setup && npm run stop"
-elif [ "$2" == "restart" ];then
+    ssh "${user}@admin.bivrost.cn" "cd /var/bivServer/ && git fetch && git reset --hard origin/master && npm install && npm run stop"
+elif [ "$1" == "restart" ];then
     echo -n "Remote server user name:"
     read user
-    ssh "${user}@admin.bivrost.cn" "cd /var/bivServer/ && git pull && npm install && npm run setup && npm run restart"
+    ssh "${user}@admin.bivrost.cn" "cd /var/bivServer/ && git fetch && git reset --hard origin/master && npm install && npm run restart"
+elif [ "$1" == "setup" ];then
+    echo -n "Remote server user name:"
+    read user
+    ssh "${user}@admin.bivrost.cn" "cd /var/bivServer/ && git fetch && git reset --hard origin/master && npm install && npm run setup"
 fi

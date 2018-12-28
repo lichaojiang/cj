@@ -1,32 +1,34 @@
 'use strict'
 
 const cors = require('cors');
-const router = require('express').router();
-const {body} = require('express-validator/check');
-const bProd = require('../lib/bProduction');
-const bDb = require('../lib/bDatabaselib');
+const express = require('express');
+const router = express.Router();
+
 const bconst = require('../lib/bConstants');
+const bres = require('../lib/bResponse');
+const crud = require('../lib/bCrudlib');
+const plan = require('../lib/bProduction').plan;
+const product = require('../lib/bProduction').product;
+const group = require('../lib/bProduction').group;
+const auth = require('../lib/bUtils').userAuth;
 
 
-router.options(" /*", cors(bconst.corsOptions));
+router.options("/*", cors(bconst.corsOptions));
 
-/* POST users listing. */
-router.post('/plan', cors(bconst.corsOptions), function(req, res, next) {
-    let sqlObj = new bDb.sql(res);
-    let planObj = new bProd.plan(sqlObj);
-    switch(req.body.method)
-    {
-        case "create":
-            let code = req.body.code || "";
-            body(['quantity', 'begin', 'end', 'assignee', 'status'], 'Missing required fields.').not().isEmpty();
-            
-            let field_arr = []
-            planObj.create(req.body.table, )
-            break;
-    }
+// plan
+router.post('/plan', cors(bconst.corsOptions), auth(), crud({tableName: 'productionplan', tableClass: plan}));
 
-    // IMPORTANT: end sql connection
-    sqlObj.end();
-});
+router.get('/plan/status', auth(), (req, res, next) => {
+    let data = {};
+    data.planStatus = bconst.planStatus;
+    data.showFields = bconst.planStatusShowFields_cn;
+    bres.send(res, data, bres.status_OK);
+})
+
+// product
+router.post('/product', cors(bconst.corsOptions), auth(), crud({tableName: 'product', tableClass: product}));
+
+// group
+router.post('/group', cors(bconst.corsOptions), auth(), crud({tableName: 'productgroup', tableClass: group}));
 
 module.exports = router;
