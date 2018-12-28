@@ -18,7 +18,7 @@ router.options("/*", cors(bconst.corsOptions));
 // plan
 router.post('/plan', cors(bconst.corsOptions), auth(), crud({tableName: 'productionplan', tableClass: plan}));
 
-router.get('/plan/status', (req, res, next) => {
+router.get('/plan/status', auth(), (req, res, next) => {
     let data = {};
     data.planStatus = bconst.planStatus;
     data.showFields = bconst.planStatusShowFields_cn;
