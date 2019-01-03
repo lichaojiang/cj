@@ -70,6 +70,10 @@ app.use('/plot', plotRouter);
 app.use('/production', productionRouter);
 app.use('/chartdata', chartDataRounter);
 
+app.get('/orange', (req, res) => {
+    res.sendFile('/var/bivServer/public/companyweb/img/orange.jpg');
+});
+
 passport.use(new LocalStrategy((username, password, done) => {
     const user = require('./lib/bUser').user;
     let userObj = new user('user');
