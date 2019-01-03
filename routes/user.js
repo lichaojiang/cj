@@ -23,7 +23,7 @@ router.post('/login', cors(bconst.corsOptions), passport.authenticate('local', {
 // logout route
 router.post('/logout', cors(bconst.corsOptions), (req, res) => {
     req.logout();
-    res.redirect('/apps/bivcloud');
+    res.redirect('/user/success');
 });
 
 // login success
