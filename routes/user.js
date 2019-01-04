@@ -6,6 +6,7 @@ const passport =require('passport');
 const bconst = require('../lib/bConstants');
 const user = require('../lib/bUser').user;
 const crud = require('../lib/bCrudlib');
+const bres = require('../lib/bResponse');
 
 const auth = require('../lib/bUtils').userAuth;
 
@@ -13,6 +14,11 @@ router.options("/*", cors(bconst.corsOptions));
 
 // user route
 router.post('/', cors(bconst.corsOptions), auth(), crud({tableName: 'user', tableClass: user}));
+
+// user info
+router.get('/info', cors(bconst.corsOptions), auth(), (req, res) => {
+    bres.send(res, req.user);
+})
 
 // login route
 router.post('/login', cors(bconst.corsOptions), passport.authenticate('local', {
@@ -23,31 +29,37 @@ router.post('/login', cors(bconst.corsOptions), passport.authenticate('local', {
 // logout route
 router.post('/logout', cors(bconst.corsOptions), (req, res) => {
     req.logout();
-    res.redirect('/user/success');
+    bres.send(res, 'success');
 });
 
 // login success
 router.get('/success', cors(bconst.corsOptions), (req, res) => {
-    res.send({
-        roles: ['admin'],
-        token: 'admin',
-        introduction: '我是超级管理员',
-        avatar: 'https://wpimg.wallstcn.com/f778738c-e4f8-4870-b634-56703b4acafe.gif',
-        name: 'Super Admin'
-      });
+    const bcrypt = require('bcrypt');
+    let saltRounds = 2;
+    bcrypt.hash(req.user.email, saltRounds, (err, hash) => {
+        if (err) 
+            bres.send(res, null, bres.ERROR);
+        
+        bres.send(res, {token: hash})
+    });
 })
 
 // login failure
 router.get('/failure', cors(bconst.corsOptions), (req, res) => {
-    res.status(401).send('Unauthorized');
+    bres.send(res, 'failure');
 })
 
 passport.serializeUser((user_id, done) => {
     done(null, user_id);
 }); 
   
-passport.deserializeUser((user_id, done) => {
-    done(null, user_id);
+passport.deserializeUser((sessionUser, done) => {
+    let userTable = new user('user');
+    userTable.getUserInfo(sessionUser.user_id, (userInfo) => {
+        done(null, userInfo);
+    }).catch(err => {
+        console.log(err);
+    });
 });
 
 module.exports = router;

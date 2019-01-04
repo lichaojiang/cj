@@ -79,9 +79,8 @@ passport.use(new LocalStrategy((username, password, done) => {
     let userObj = new user('user');
     userObj.verifyUser(username, password, done).catch(err => {
         console.log(err);
-    }).then(() => {
-        userObj.endSql();
-    })
+        return Promise.reject(err);
+    });
 }));
 
 // catch 404 and forward to error handler
