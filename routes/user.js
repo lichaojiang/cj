@@ -46,7 +46,7 @@ router.get('/success', cors(bconst.corsOptions), (req, res) => {
 
 // login failure
 router.get('/failure', cors(bconst.corsOptions), (req, res) => {
-    bres.send(res, 'failure');
+    bres.send(res, 'Login failed');
 })
 
 passport.serializeUser((user_id, done) => {
@@ -55,7 +55,7 @@ passport.serializeUser((user_id, done) => {
   
 passport.deserializeUser((sessionUser, done) => {
     let userTable = new user('user');
-    userTable.getUserInfo(sessionUser.user_id, (userInfo) => {
+    return userTable.getUserInfo(sessionUser.user_id, (userInfo) => {
         done(null, userInfo);
     }).catch(err => {
         console.log(err);
