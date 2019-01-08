@@ -2,16 +2,12 @@
 
 const express = require('express');
 const router = express.Router();
-const execSync = require('child_process').execSync;
-const url = require('url');
 const path = require('path');
-const moment = require('moment');
 const cors = require('cors');
 const bconst = require('../lib/bConstants');
 const bplot = require('../lib/bPlotlib');
 const bres = require('../lib/bResponse');
 const bUtil = require('../lib/bUtils');
-const bach = require('../lib/bAnalysiscorestatus');
 const auth = require('../lib/bUtils').userAuth;
 
 
@@ -20,106 +16,106 @@ router.options("/*", cors(bconst.corsOptions));
 /* POST users listing. */
 router.post('/', cors(bconst.corsOptions), auth(), function(req, res, next) {
 	// 将url的query查询对象交给params保存
-    const params = url.parse(req.url, true).query;
+    // const params = url.parse(req.url, true).query;
     //定义变量保存获得数据的接口 
-    let api_get_data, cmdstr;
+    let api_plot, cmdstr;
     let argv = [];
-	switch(params.method)
+	switch(req.body.method)
 	{
         case "line":
             //拿到数据
-            api_get_data = path.join(bconst.exedir, "getDataByTime.py");
-            cmdstr = bconst.statspython+" "+api_get_data+" "+params.start+" "+params.end+" "+
-                params.type+" "+params.machine+" "+params.min+" "+params.max;
+            api_plot = path.join(bconst.exedir, "getDataByTime.py");
+            cmdstr = bconst.statspython+" "+api_plot+" "+req.body.start+" "+req.body.end+" "+
+                req.body.type+" "+req.body.machine+" "+req.body.min+" "+req.body.max;
             //执行cmdstr
             console.log("cmd string is:" + cmdstr);
-            argv = [req.body.xlabel, req.body.ylabel, req.body.title];
-            bUtil.execute(res, cmdstr, bplot.plotLineNoX, argv);	
+
+            // bUtil.execute(res, cmdstr, bplot.plotLineNoX, argv);	
+            bUtil.execute(cmdstr, bplot.plotLineNoX).then(output => {
+                bres.send(res, output.data, output.status);
+            }).catch(err => {
+                let err_status = bres.findStatus(err);
+                let data = tableObj.getDataFromStatus(err_status);
+                console.log(err_status);
+                console.log(err.stack);
+                bres.send(res, data, err_status);
+            });
 		    break;
         case "hist":
-            api_get_data=path.join(bconst.exedir,"getDataByTime.py");
-            cmdstr=bconst.statspython+" "+api_get_data+" "+params.start+" "+params.end+" "
-                        +params.type+" "+params.machine+" "+params.min+" "+params.max;
+            api_plot = path.join(bconst.exedir,"getDataByTime.py");
+            cmdstr=bconst.statspython+" "+api_plot+" "+req.body.start+" "+req.body.end+" "
+                        +req.body.type+" "+req.body.machine+" "+req.body.min+" "+req.body.max;
             console.log("cmd string is :"+cmdstr);
-            argv = [params.amount];
-            bUtil.execute(res, cmdstr, bplot.plotHist, argv);
+            argv = [req.body.bin];
+            bUtil.execute(cmdstr, bplot.plotHist, argv).then(output => {
+                bres.send(res, output.data, output.status); 
+            }).catch(err =>{
+                let err_status = bres.findStatus(err);
+                let data = tableObj.getDataFromStatus(err_status);
+                console.log(err_status);
+                console.log(err.stack);
+                bres.send(res, data, err_status);
+            });
+            break;
+        case "getdata":
+            let missing_arr = [];
+            if (typeof req.body.query.start === 'undefined')
+                missing_arr.push('query.start')
+            if (typeof req.body.query.end === 'undefined')
+                missing_arr.push('query.end')
+            if (typeof req.body.query.type === 'pace')
+                missing_arr.push('query.pace')
+            if (typeof req.body.query.machine === 'pace')
+                missing_arr.push('query.pace')
+            
+            if (missing_arr.length > 0) {
+                bres.send(res, missing_arr, bres.ERR_REQUIRED)
+                return
+            }
+                
+            api_plot = path.join(bconst.exedir, "getDataWithTime.py");
+
+            let options = {};
+            if (typeof req.body.min !== "undefined")
+                options.min = req.body.min
+            if (typeof req.body.max !== "undefined")
+                options.max = req.body.max
+
+            // python getDataWithTime.py "2018-7-16" "14:30:00" "2018-7-16" "15:00:00" "pace" "1"  "{'min': 0, 'max': 900}"
+            cmdstr = bconst.statspython+" "+api_plot+" "+req.body.query.start+" "+req.body.query.end+" "+
+                req.body.query.type+" "+req.body.query.machine+" "+JSON.stringify(options);
+            //执行cmdstr
+            console.log("cmd string is:" + cmdstr);
+            
+            bUtil.execute(cmdstr, bplot.getData).then(output => {
+                bres.send(res, output.data, output.status);
+            }).catch(err =>{
+                let err_status = bres.findStatus(err);
+                console.log(err_status);
+                console.log(err.stack);
+                bres.send(res, null, err_status);
+            });
             break;
         case "any":
-            // request body
-            /*
-            {
-                "machine": "1",
-                "interval_start":["2018-07-14 8:00:00", "2018-07-14 13:30:00"],
-                "interval_end":["2018-07-14 12:00:00", "2018-07-14 17:30:00"],
-                "days": 5,
-                "title": "Efficiency",
-                "xlabel": "Date",
-                "ylabel": "Eff",
-                "alias":["morning","afternoon"],
-                "variables":"'throughput,elasped,setup,poweroff'",
-                "recipe":"'throughput/(elasped-setup-poweroff)'",
-                "getdata":["2018-07-14 00:00:00", "2018-08-30 00:00:00", "cycle"]
-            }
-            */
+            if (typeof req.body.query === 'undefined')
+                return bres.send(res, null, bres.ERR_BODY)
 
-            let body = req.body;
-            if (body.getdata !== null && typeof body.getdata != 'undefined') {
-                let min = body.getdata[3] || 0;
-                let max = body.getdata[4] || 1000000;
-                lineMethod(req, res, body.getdata[0], body.getdata[1], body.getdata[2], body.machine, min, max)
-            }
-            else {
-                let x = [];
-                let y = [];
+            let query = req.body.query;
+            
+            api_plot = path.join(bconst.exedir, "magicbag.py");
+            // python magicbag.py "throughput,elasped,setup,poweroff" "throughput/(elasped-setup-poweroff)" "1" "2018-7-16" 7 "08:00:00-12:00:00-1,13:30:00-17:30:00-2"
+            cmdstr = bconst.statspython+" "+api_plot+" "+query.variables+" "+query.recipe+" "+query.machine+" "+
+                query.start_date+" "+query.days+" "+query.intervals;
+            console.log("cmd string is:" + cmdstr);
 
-                // datetime formate
-                const DTFORMAT = "YYYY-MM-DD kk:mm:ss"
-                const XFORMAT = "MM-DD"
-                let status = bres.status_OK;
-                let isEmptyInterval = false;
-                
-                api_get_data = path.join(bconst.exedir, "magicbag.py");
-                if (body.interval_start.length !== body.interval_end.length) {
-                    status = bres.ERR_PLOT_INTERVAL;
-                    bres.send(res, null, status);
-                    return;
-                }
-                let interval_num = body.interval_start.length;
-                for (let i=0; i<body.days; i++) {
-                    for (let j=0; j<interval_num; j++) {
-                        let start = moment(body.interval_start[j], DTFORMAT);
-                        let end = moment(body.interval_end[j], DTFORMAT);
-
-                        start.add(i, 'days');
-                        end.add(i, 'days');
-
-                        cmdstr = bconst.statspython+" "+api_get_data+" "+start.format(DTFORMAT)+" "+end.format(DTFORMAT)+" "+
-                            body.machine+" "+body.variables+" "+body.recipe;
-                        console.log("cmd string is:" + cmdstr);
-
-                        let stdout = execSync(cmdstr);
-                        let output = bUtil.parseStdout(stdout);
-                        // no data or zero division
-                        if (bach.isWARN_NO_DATA(output.status.errcode) ||
-                            bach.isWARN_ZERODIVISION(output.status.errcode)) {
-                            isEmptyInterval = true;
-                            continue;
-                        }
-                        
-                        x.push(start.format(XFORMAT)+" ("+body.alias[j]+")");
-                        y.push(output.data); 
-                    }
-                }
-
-                let plot = bplot.plotLineWithX(x, y, body.xlabel, body.ylabel, body.title);
-                if (bach.isSTATUSOK(plot.errcode) && isEmptyInterval === true) {
-                    status = bres.WARN_EMPTY_INTERVAL
-                }
-                else {
-                    status = plot.status;
-                }
-                bres.send(res, plot.data, status);
-            }
+            bUtil.execute(cmdstr, bplot.plotAny).then(output => {
+                bres.send(res, output.data, output.status); 
+            }).catch(err =>{
+                let err_status = bres.findStatus(err);
+                console.log(err_status);
+                console.log(err.stack);
+                bres.send(res, null, err_status);
+            });
             break;
         default:
 		    break;
