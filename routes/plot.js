@@ -72,6 +72,10 @@ router.post('/', cors(bconst.corsOptions), auth(), function(req, res, next) {
                 bres.send(res, missing_arr, bres.ERR_REQUIRED)
                 return
             }
+
+            // bad handling, need to improve
+            if (req.body.query.type !== 'pace' & req.body.query.type !== 'cycle')
+                return bres.send(res, 'Error in query.type', bres.ERROR)
                 
             api_plot = path.join(bconst.exedir, "getDataWithTime.py");
 
