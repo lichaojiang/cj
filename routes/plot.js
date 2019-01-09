@@ -20,6 +20,8 @@ router.post('/', cors(bconst.corsOptions), auth(), function(req, res, next) {
     //定义变量保存获得数据的接口 
     let api_plot, cmdstr;
     let argv = [];
+    if (typeof req.body.method === 'undefined')
+        return bres.send(res, null, bres.ERR_BODY);
 	switch(req.body.method)
 	{
         case "line":
