@@ -35,7 +35,6 @@ router.post('/', cors(bconst.corsOptions), auth(), function(req, res, next) {
                 bres.send(res, output.data, output.status);
             }).catch(err => {
                 let err_status = bres.findStatus(err);
-                let data = tableObj.getDataFromStatus(err_status);
                 console.log(err_status);
                 console.log(err.stack);
                 bres.send(res, data, err_status);
@@ -51,7 +50,6 @@ router.post('/', cors(bconst.corsOptions), auth(), function(req, res, next) {
                 bres.send(res, output.data, output.status); 
             }).catch(err =>{
                 let err_status = bres.findStatus(err);
-                let data = tableObj.getDataFromStatus(err_status);
                 console.log(err_status);
                 console.log(err.stack);
                 bres.send(res, data, err_status);
