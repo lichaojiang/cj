@@ -110,7 +110,7 @@ router.post('/', cors(bconst.corsOptions), auth(), function(req, res, next) {
             
             api_plot = path.join(bconst.exedir, "magicbag.py");
 
-            let dump_dir = path.join(bconst.root, 'dumps', `${req.user.organization_id}`);
+            let dump_dir = path.join(bconst.dump_root, `${req.user.organization_id}`);
             if (!fs.existsSync(dump_dir)){
                 fs.mkdirSync(dump_dir);
             }
