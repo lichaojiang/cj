@@ -7,3 +7,4 @@ node_modules/
 envs/
 npm-debug.log
 .env
+dumps/*

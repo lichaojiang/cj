@@ -4,6 +4,8 @@ const express = require('express');
 const router = express.Router();
 const path = require('path');
 const cors = require('cors');
+const fs = require('fs');
+
 const bconst = require('../lib/bConstants');
 const bplot = require('../lib/bPlotlib');
 const bres = require('../lib/bResponse');
@@ -107,11 +109,35 @@ router.post('/', cors(bconst.corsOptions), auth(), function(req, res, next) {
             let query = req.body.query;
             
             api_plot = path.join(bconst.exedir, "magicbag.py");
-            // python magicbag.py "throughput,elasped,setup,poweroff" "throughput/(elasped-setup-poweroff)" "1" "2018-7-16" 7 "08:00:00-12:00:00-1,13:30:00-17:30:00-2"
-            let variables = `'${query.variables}'`;
-            let recipe = `'${query.recipe}'`;
-            cmdstr = bconst.statspython+" "+api_plot+" "+variables+" "+recipe+" "+query.machine+" "+
-                query.start_date+" "+query.days+" "+query.intervals;
+
+            let dump_dir = path.join(bconst.root, 'dumps', `${req.user.organization_id}`);
+            if (!fs.existsSync(dump_dir)){
+                fs.mkdirSync(dump_dir);
+            }
+            
+            fs.access(dump_dir, (err) => {
+                return new Promise((resolve, reject) => {
+                    if (err) {
+                        return reject(bres.getErrcode(bres.ERROR))
+                    }
+
+                    cmdstr = `${bconst.statspython} ${api_plot} '${query.variables}' '${query.recipe}' ${query.machine} '${query.start_date}' ${query.days} '${query.intervals}' '${dump_dir}'`;
+                    console.log("cmd string is:" + cmdstr);
+
+                    return bUtil.execute(cmdstr, bplot.plotAny).then(output => {
+                        bres.send(res, output.data, output.status);
+                        resolve()
+                    })
+                }).catch(err =>{
+                    let err_status = bres.findStatus(err);
+                    console.log(err_status);
+                    console.log(err.stack);
+                    bres.send(res, null, err_status);
+                });
+            })
+            /*
+            // python magicbag.py throughput,elasped,setup,poweroff throughput/(elasped-setup-poweroff) 1 2018-7-16 7 08:00:00-12:00:00-1,13:30:00-17:30:00-2 /dump_dir
+            cmdstr = `${python} ${api_plot} '${query.variables}' '${query.recipe}' ${query.machine} '${query.start_date}' ${query.days} '${query.intervals}'`;
             console.log("cmd string is:" + cmdstr);
 
             bUtil.execute(cmdstr, bplot.plotAny).then(output => {
@@ -122,6 +148,7 @@ router.post('/', cors(bconst.corsOptions), auth(), function(req, res, next) {
                 console.log(err.stack);
                 bres.send(res, null, err_status);
             });
+            */
             break;
         default:
 		    break;
