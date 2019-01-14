@@ -125,7 +125,6 @@ router.post('/', cors(bconst.corsOptions), auth(), function(req, res, next) {
                         return reject(bres.getErrcode(bres.ERROR))
                     }
 
-
                     // python magicbag.py throughput,elasped,setup,poweroff throughput/(elasped-setup-poweroff) 1 2018-7-16 7 08:00:00-12:00:00,13:30:00-17:30:00 /dump_dir
                     cmdstr = `${bconst.statspython} ${api_plot} '${query.variables}' '${query.recipe}' ${query.machine} '${query.start_date}' ${query.days} '${query.intervals}' '${dump_dir}'`;
                     console.log("cmd string is:" + cmdstr);
