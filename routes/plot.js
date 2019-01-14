@@ -82,14 +82,18 @@ router.post('/', cors(bconst.corsOptions), auth(), function(req, res, next) {
             api_plot = path.join(bconst.exedir, "getDataWithTime.py");
 
             let options = {};
-            if (typeof req.body.min !== "undefined")
-                options.min = req.body.min
-            if (typeof req.body.max !== "undefined")
-                options.max = req.body.max
+            if (typeof req.body.query.min !== "undefined")
+                options.min = req.body.query.min
+            if (typeof req.body.query.max !== "undefined")
+                options.max = req.body.query.max
+            
+            options = JSON.stringify(options);
+            if (options === '{}') options = "";
 
             // python getDataWithTime.py "2018-7-16" "14:30:00" "2018-7-16" "15:00:00" "pace" "1"  "{'min': 0, 'max': 900}"
-            cmdstr = bconst.statspython+" "+api_plot+" "+req.body.query.start+" "+req.body.query.end+" "+
-                req.body.query.type+" "+req.body.query.machine+" "+JSON.stringify(options);
+            // cmdstr = bconst.statspython+" "+api_plot+" "+req.body.query.start+" "+req.body.query.end+" "+
+            //    req.body.query.type+" "+req.body.query.machine+" "+options;
+            cmdstr = `${bconst.statspython} ${api_plot} ${req.body.query.start} ${req.body.query.end} ${req.body.query.type} ${req.body.query.machine} '${options}'`
             //执行cmdstr
             console.log("cmd string is:" + cmdstr);
             
@@ -121,6 +125,8 @@ router.post('/', cors(bconst.corsOptions), auth(), function(req, res, next) {
                         return reject(bres.getErrcode(bres.ERROR))
                     }
 
+
+                    // python magicbag.py throughput,elasped,setup,poweroff throughput/(elasped-setup-poweroff) 1 2018-7-16 7 08:00:00-12:00:00,13:30:00-17:30:00 /dump_dir
                     cmdstr = `${bconst.statspython} ${api_plot} '${query.variables}' '${query.recipe}' ${query.machine} '${query.start_date}' ${query.days} '${query.intervals}' '${dump_dir}'`;
                     console.log("cmd string is:" + cmdstr);
 
@@ -136,7 +142,6 @@ router.post('/', cors(bconst.corsOptions), auth(), function(req, res, next) {
                 });
             })
             /*
-            // python magicbag.py throughput,elasped,setup,poweroff throughput/(elasped-setup-poweroff) 1 2018-7-16 7 08:00:00-12:00:00-1,13:30:00-17:30:00-2 /dump_dir
             cmdstr = `${python} ${api_plot} '${query.variables}' '${query.recipe}' ${query.machine} '${query.start_date}' ${query.days} '${query.intervals}'`;
             console.log("cmd string is:" + cmdstr);
 
