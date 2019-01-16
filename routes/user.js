@@ -13,7 +13,7 @@ const auth = require('../lib/bUtils').userAuth;
 router.options("/*", cors(bconst.corsOptions)); 
 
 // user route
-router.post('/', cors(bconst.corsOptions), auth(), crud({tableName: 'user', tableClass: user}));
+router.post('/', cors(bconst.corsOptions), auth(), crud('user', user));
 
 // user info
 router.get('/info', cors(bconst.corsOptions), auth(), (req, res) => {

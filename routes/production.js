@@ -16,7 +16,7 @@ const auth = require('../lib/bUtils').userAuth;
 router.options("/*", cors(bconst.corsOptions));
 
 // plan
-router.post('/plan', cors(bconst.corsOptions), auth(), crud({tableName: 'productionplan', tableClass: plan}));
+router.post('/plan', cors(bconst.corsOptions), auth(), crud('productionplan', plan));
 
 router.get('/plan/status', auth(), (req, res, next) => {
     let data = {};
@@ -26,9 +26,9 @@ router.get('/plan/status', auth(), (req, res, next) => {
 })
 
 // product
-router.post('/product', cors(bconst.corsOptions), auth(), crud({tableName: 'product', tableClass: product}));
+router.post('/product', cors(bconst.corsOptions), auth(), crud('product', product));
 
 // group
-router.post('/group', cors(bconst.corsOptions), auth(), crud({tableName: 'productgroup', tableClass: group}));
+router.post('/group', cors(bconst.corsOptions), auth(), crud('productgroup', group));
 
 module.exports = router;

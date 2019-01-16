@@ -10,6 +10,6 @@ const auth = require('../lib/bUtils').userAuth;
 router.options("/*", cors(bconst.corsOptions)); 
 
 // user route
-router.post('/', cors(bconst.corsOptions), auth(), crud({tableName: 'chartdata', tableClass: chartdata}));
+router.post('/', cors(bconst.corsOptions), auth(), crud('chartdata', chartdata));
 
 module.exports = router;
