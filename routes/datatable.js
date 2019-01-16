@@ -16,7 +16,7 @@ const auth = require('../lib/bUtils').userAuth;
 router.options("/*", cors(bconst.corsOptions)); 
 
 /* POST users listing. */
-router.post('/', cors(bconst.corsOptions), auth(), function(req, res, next) {
+router.get('/', cors(bconst.corsOptions), auth(), function(req, res, next) {
     var params = url.parse(req.url, true).query;
     let cmdstr, api_bivstats, api_get_data;
 	switch(params.method)
