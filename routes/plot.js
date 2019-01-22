@@ -140,19 +140,6 @@ router.post('/', cors(bconst.corsOptions), auth(), function(req, res, next) {
                     bres.send(res, null, err_status);
                 });
             })
-            /*
-            cmdstr = `${python} ${api_plot} '${query.variables}' '${query.recipe}' ${query.machine} '${query.start_date}' ${query.days} '${query.intervals}'`;
-            console.log("cmd string is:" + cmdstr);
-
-            bUtil.execute(cmdstr, bplot.plotAny).then(output => {
-                bres.send(res, output.data, output.status); 
-            }).catch(err =>{
-                let err_status = bres.findStatus(err);
-                console.log(err_status);
-                console.log(err.stack);
-                bres.send(res, null, err_status);
-            });
-            */
             break;
         default:
 		    break;

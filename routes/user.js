@@ -33,15 +33,25 @@ router.post('/logout', cors(bconst.corsOptions), (req, res) => {
 });
 
 // login success
-router.get('/success', cors(bconst.corsOptions), (req, res) => {
+router.get('/success', cors(bconst.corsOptions), async (req, res) => {
     const bcrypt = require('bcrypt');
     let saltRounds = 2;
-    bcrypt.hash(req.user.email, saltRounds, (err, hash) => {
-        if (err) 
-            bres.send(res, null, bres.ERROR);
-        
-        bres.send(res, {token: hash})
-    });
+    try {
+        let userInfo = await user.getUserInfo(req.user.user_id)
+        let email = userInfo.email;
+        bcrypt.hash(email, saltRounds, (err, hash) => {
+            if (err) 
+                return bres.send(res, null, bres.ERROR);
+            
+            // generate token for frontend
+            bres.send(res, {token: hash})
+        });
+    } catch (err) {
+        let err_status = bres.findStatus(err);
+        console.log(err_status);
+        console.log(err.stack);
+        bres.send(res, null, err_status);
+    }
 })
 
 // login failure
@@ -49,17 +59,12 @@ router.get('/failure', cors(bconst.corsOptions), (req, res) => {
     bres.send(res, 'Login failed');
 })
 
-passport.serializeUser((user_id, done) => {
-    done(null, user_id);
+passport.serializeUser((user, done) => {
+    done(null, user);
 }); 
   
-passport.deserializeUser((sessionUser, done) => {
-    let userTable = new user('user');
-    return userTable.getUserInfo(sessionUser.user_id, (userInfo) => {
-        done(null, userInfo);
-    }).catch(err => {
-        console.log(err);
-    });
+passport.deserializeUser((user, done) => {
+    done(null, user)
 });
 
 module.exports = router;
