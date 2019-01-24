@@ -5,27 +5,14 @@
     CREATE TABLE organization (
         id MEDIUMINT NOT NULL AUTO_INCREMENT,
         name VARCHAR(255) NOT NULL,
-        included_tables TEXT NOT NULL,
+        included_modules TEXT NOT NULL,
         created_at TIMESTAMP NULL DEFAULT CURRENT_TIMESTAMP,
         updated_at TIMESTAMP NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
         isdeleted MEDIUMINT NOT NULL DEFAULT 0,
         PRIMARY KEY (id),
         UNIQUE KEY name (name, isdeleted)
     ) CHARACTER SET = utf8;
-    INSERT INTO organization (name, included_tables) VALUES ('bivrost', '*');
-```
-
-# role
-```sql
-    CREATE TABLE role (
-        id MEDIUMINT NOT NULL AUTO_INCREMENT,
-        name VARCHAR(255) NOT NULL,
-        privilege VARCHAR(255) NOT NULL DEFAULT "",
-        created_at TIMESTAMP NULL DEFAULT CURRENT_TIMESTAMP,
-        updated_at TIMESTAMP NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
-        PRIMARY KEY (id),
-        UNIQUE KEY (name)
-    ) CHARACTER SET = utf8;
+    INSERT INTO organization (name, included_modules) VALUES ('bivrost', '*');
 ```
 
 # department
@@ -33,12 +20,30 @@
     CREATE TABLE department (
         id MEDIUMINT NOT NULL AUTO_INCREMENT,
         name VARCHAR(255) NOT NULL,
-        privilege VARCHAR(255) NOT NULL DEFAULT "",
+        belong MEDIUMINT NOT NULL DEFAULT 1,
+        note TEXT,
+        created_at TIMESTAMP NULL DEFAULT CURRENT_TIMESTAMP,
+        updated_at TIMESTAMP NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+        PRIMARY KEY (id),
+        UNIQUE KEY (name),
+        FOREIGN KEY (belong) REFERENCES department(id)
+    ) CHARACTER SET = utf8;
+    INSERT INTO role (name, belong, note) VALUES ('bivrost', '1', '彼络科技'), ('R&D', '1', '研发部门');
+```
+
+# role
+```sql
+    CREATE TABLE role (
+        id MEDIUMINT NOT NULL AUTO_INCREMENT,
+        name VARCHAR(255) NOT NULL,
+        note TEXT,
+        privilege TEXT,
         created_at TIMESTAMP NULL DEFAULT CURRENT_TIMESTAMP,
         updated_at TIMESTAMP NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
         PRIMARY KEY (id),
         UNIQUE KEY (name)
     ) CHARACTER SET = utf8;
+    INSERT INTO role (name, note, privilege) VALUES ('admin', 'bivrost', 'admin'), ('analysis', 'bivrost', 'analysis'), ('production', 'bivrost', 'production'), ('user', 'bivrost', 'user'), ('monitor', 'bivrost', 'monitor'), ('developer', 'bivrost', 'analysis,production,user,monitor');
 ```
 
 # user
@@ -52,31 +57,34 @@
         nickname VARCHAR(255),
         phone VARCHAR(255),
         gender VARCHAR(255),
-        privilege VARCHAR(255),
         department_id MEDIUMINT,
-        role_id MEDIUMINT,
         created_at TIMESTAMP NULL DEFAULT CURRENT_TIMESTAMP,
         updated_at TIMESTAMP NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
         isdeleted MEDIUMINT NOT NULL DEFAULT 0,
         PRIMARY KEY (id),
         UNIQUE KEY email (email, isdeleted),
         FOREIGN KEY (organization_id) REFERENCES organization(id), 
-        FOREIGN KEY (department_id) REFERENCES department(id) ON DELETE SET NULL,
-        FOREIGN KEY (role_id) REFERENCES role(id) ON DELETE SET NULL
+        FOREIGN KEY (department_id) REFERENCES department(id) ON DELETE SET NULL
     ) CHARACTER SET = utf8;
+    INSERT INTO role (email, name, password, organization_id, phone, gender, department_id) VALUES
+    ('test@bivrost.cn', 'Olly', '$2b$10$.u/PC4ZsfbEEyxvB5ANBYuiRlj.wcxdS/yTZQkyoPqS/fDW6Y.8v2', 1, '0755-8888888', 'female', 1),
+    ('guest@bivrost.cn', 'guest', '$2b$10$.u/PC4ZsfbEEyxvB5ANBYuiRlj.wcxdS/yTZQkyoPqS/fDW6Y.8v2', 1, '0755-8888888', 'male', 1),
+    ('developer@bivrost.cn', 'Luka', '$2b$10$.u/PC4ZsfbEEyxvB5ANBYuiRlj.wcxdS/yTZQkyoPqS/fDW6Y.8v2', 1, '0755-8888888', 'male', 2);
 ```
 
-# recentrequest
+# userrole
 ```sql
-    CREATE TABLE recentrequest (
+    CREATE TABLE userrole (
         id MEDIUMINT NOT NULL AUTO_INCREMENT,
         user_id MEDIUMINT NOT NULL,
-        request VARCHAR(255) NOT NULL,
-        module VARCHAR(255),
+        role_id MEDIUMINT NOT NULL,
         created_at TIMESTAMP NULL DEFAULT CURRENT_TIMESTAMP,
+        updated_at TIMESTAMP NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
         PRIMARY KEY (id),
-        FOREIGN KEY (user_id) REFERENCES user(id)
+        FOREIGN KEY (user_id) REFERENCES user(id) ON DELETE CASCADE,
+        FOREIGN KEY (role_id) REFERENCES role(id) ON DELETE CASCADE
     ) CHARACTER SET = utf8;
+    INSERT INTO role (user_id, role_id) VALUES (1, 1), (2, 2), (2, 3), (3, 6);
 ```
 
 # productgroup

@@ -14,6 +14,7 @@ var bivcloudRouter = require('./routes/bivcloud');
 var plotRouter = require('./routes/plot');
 var productionRouter = require('./routes/production');
 var chartDataRounter = require('./routes/chartdata');
+var infoRouter = require('./routes/info');
 
 // authtification packages
 var expressValidator = require('express-validator');
@@ -69,17 +70,16 @@ app.use('/apps', bivcloudRouter);
 app.use('/plot', plotRouter);
 app.use('/production', productionRouter);
 app.use('/chartdata', chartDataRounter);
+app.use('/info', infoRouter);
 
 app.get('/orange', (req, res) => {
     res.sendFile('/var/bivServer/public/companyweb/img/orange.jpg');
 });
 
-passport.use(new LocalStrategy((username, password, done) => {
-    const user = require('./lib/bUser').user;
-    let userObj = new user('user');
-    userObj.verifyUser(username, password, done).catch(err => {
+passport.use(new LocalStrategy(async (username, password, done) => {
+    const userCls = require('./lib/bUser').user;
+    await userCls.verifyUser(username, password, done).catch(err => {
         console.log(err);
-        return Promise.reject(err);
     });
 }));
 

@@ -18,13 +18,6 @@ router.options("/*", cors(bconst.corsOptions));
 // plan
 router.post('/plan', cors(bconst.corsOptions), auth(), crud('productionplan', plan));
 
-router.get('/plan/status', auth(), (req, res, next) => {
-    let data = {};
-    data.planStatus = bconst.planStatus;
-    data.showFields = bconst.planStatusShowFields_cn;
-    bres.send(res, data, bres.status_OK);
-})
-
 // product
 router.post('/product', cors(bconst.corsOptions), auth(), crud('product', product));
 
