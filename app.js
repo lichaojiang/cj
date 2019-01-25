@@ -77,10 +77,12 @@ app.get('/orange', (req, res) => {
 });
 
 passport.use(new LocalStrategy(async (username, password, done) => {
-    const userCls = require('./lib/bUser').user;
-    await userCls.verifyUser(username, password, done).catch(err => {
+    try {
+        const userCls = require('./lib/bUser').user;
+        await userCls.verifyUser(username, password, done);
+    } catch (err) {
         console.log(err);
-    });
+    }
 }));
 
 // catch 404 and forward to error handler

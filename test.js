@@ -1,10 +1,26 @@
-async function test1() {
-    await Promise.reject(1)
-    console.log(2)
+async function foo() {
+    try {
+        console.log(1);
+        await test.bar();
+        console.log(2);
+    } catch (err) {
+        console.log(err)   
+    }
 }
 
-async function test2() {
-    await test1()
+class test {
+    static async bar() {
+        await query()
+    }
 }
 
-test2().catch(err => {console.log(err)})
+
+function query() {
+    return new Promise((resolve, reject) => {
+        setTimeout(() => {
+            reject(new Error());
+        }, 1000);        
+    })
+}
+
+foo()

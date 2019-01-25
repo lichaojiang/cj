@@ -16,12 +16,12 @@ const auth = require('../lib/bUtils').userAuth;
 router.options("/*", cors(bconst.corsOptions));
 
 // plan
-router.post('/plan', cors(bconst.corsOptions), auth(), crud('productionplan', plan));
+router.post('/plan', cors(bconst.corsOptions), auth(['production']), crud('productionplan', plan));
 
 // product
-router.post('/product', cors(bconst.corsOptions), auth(), crud('product', product));
+router.post('/product', cors(bconst.corsOptions), auth(['production']), crud('product', product));
 
 // group
-router.post('/group', cors(bconst.corsOptions), auth(), crud('productgroup', group));
+router.post('/group', cors(bconst.corsOptions), auth(['production']), crud('productgroup', group));
 
 module.exports = router;

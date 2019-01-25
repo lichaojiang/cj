@@ -16,7 +16,7 @@ const auth = require('../lib/bUtils').userAuth;
 router.options("/*", cors(bconst.corsOptions)); 
 
 /* POST users listing. */
-router.post('/', cors(bconst.corsOptions), auth(), function(req, res, next) {
+router.post('/', cors(bconst.corsOptions), auth(['analysis']), function(req, res, next) {
 	// 将url的query查询对象交给params保存
     // const params = url.parse(req.url, true).query;
     //定义变量保存获得数据的接口 

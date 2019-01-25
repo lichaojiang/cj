@@ -28,7 +28,7 @@
         UNIQUE KEY (name),
         FOREIGN KEY (belong) REFERENCES department(id)
     ) CHARACTER SET = utf8;
-    INSERT INTO role (name, belong, note) VALUES ('bivrost', '1', '彼络科技'), ('R&D', '1', '研发部门');
+    INSERT INTO department (name, belong, note) VALUES ('bivrost', '1', '彼络科技'), ('R&D', '1', '研发部门');
 ```
 
 # role
@@ -66,7 +66,7 @@
         FOREIGN KEY (organization_id) REFERENCES organization(id), 
         FOREIGN KEY (department_id) REFERENCES department(id) ON DELETE SET NULL
     ) CHARACTER SET = utf8;
-    INSERT INTO role (email, name, password, organization_id, phone, gender, department_id) VALUES
+    INSERT INTO user (email, name, password, organization_id, phone, gender, department_id) VALUES
     ('test@bivrost.cn', 'Olly', '$2b$10$.u/PC4ZsfbEEyxvB5ANBYuiRlj.wcxdS/yTZQkyoPqS/fDW6Y.8v2', 1, '0755-8888888', 'female', 1),
     ('guest@bivrost.cn', 'guest', '$2b$10$.u/PC4ZsfbEEyxvB5ANBYuiRlj.wcxdS/yTZQkyoPqS/fDW6Y.8v2', 1, '0755-8888888', 'male', 1),
     ('developer@bivrost.cn', 'Luka', '$2b$10$.u/PC4ZsfbEEyxvB5ANBYuiRlj.wcxdS/yTZQkyoPqS/fDW6Y.8v2', 1, '0755-8888888', 'male', 2);
@@ -84,7 +84,7 @@
         FOREIGN KEY (user_id) REFERENCES user(id) ON DELETE CASCADE,
         FOREIGN KEY (role_id) REFERENCES role(id) ON DELETE CASCADE
     ) CHARACTER SET = utf8;
-    INSERT INTO role (user_id, role_id) VALUES (1, 1), (2, 2), (2, 3), (3, 6);
+    INSERT INTO userrole (user_id, role_id) VALUES (1, 1), (2, 2), (2, 3), (3, 6);
 ```
 
 # productgroup
@@ -100,6 +100,7 @@
         PRIMARY KEY (id),
         UNIQUE KEY name (name, isdeleted)
     ) CHARACTER SET = utf8;
+    INSERT INTO productgroup (code, name, note) VALUES ('cam', 'camera', 'bivrost camera');
 ```
 
 # product
@@ -118,6 +119,8 @@
         UNIQUE KEY name (name, isdeleted),
         FOREIGN KEY (productgroup_id) REFERENCES productgroup(id) ON DELETE SET NULL
     ) CHARACTER SET = utf8;
+    INSERT INTO product (code, productgroup_id, name, price, note) 
+    VALUES ('1200p-b', 1, 'Black Magic', 10000, '1200万像素黑色相机'), ('2400p-r', 1, 'Red Sea', 30000, '2400万像素红色相机');
 ```
 
 # productionplan
@@ -139,6 +142,8 @@
         FOREIGN KEY (product_id) REFERENCES product(id) ON DELETE SET NULL,
         FOREIGN KEY (assignee_id) REFERENCES user(id)
     ) CHARACTER SET = utf8;
+    INSERT INTO productionplan (title, begin, end, assignee_id, status, product_id, quantity, note)
+    VALUES ('Apple Order', '2019-01-01', '2019-01-31', 3, 'complete', 1, 1000000, '请使用1号生产线'), ('Apple Order', '2019-03-01', '2019-03-31', 3, 'waiting', 1, 1000000, "重要订单，优先安排"), ('Dell Order', '2019-04-01', '2019-04-15', 1, 'waiting', 2, 500000, "重要订单，优先安排");
 ```
 
 # chartdata
@@ -152,4 +157,10 @@
         PRIMARY KEY (id), 
         FOREIGN KEY (user_id) REFERENCES user(id) 
     ) CHARACTER SET = utf8;
+```
+
+# grant permission
+```sql
+    GRANT ALL PRIVILEGES ON bivcloud_beta.* TO 'developer'@'%' IDENTIFIED BY 'password';
+    FLUSH PRIVILEGES;
 ```

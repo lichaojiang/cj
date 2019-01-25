@@ -13,20 +13,19 @@ const auth = require('../lib/bUtils').userAuth;
 router.options("/*", cors(bconst.corsOptions)); 
 
 // user route
-router.post('/', cors(bconst.corsOptions), auth(), crud('user', user));
+router.post('/', cors(bconst.corsOptions), auth(['user']), crud('user', user));
 
 // user info
 router.get('/info', cors(bconst.corsOptions), auth(), async (req, res) => {
-    let userInfo;
     try {
-        userInfo = await user.getUserInfo(req.user.user_id, req.user.organization_id);
+        let userInfo = await user.getUserInfo(req.user.user_id, req.user.organization_id);
+        bres.send(res, userInfo);
     } catch (err) {
         let err_status = bres.findStatus(err);
         console.log(err_status);
         console.log(err.stack);
         return bres.send(res, null, err_status);
     }
-    bres.send(res, userInfo);
 })
 
 // login route
