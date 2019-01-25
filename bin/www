@@ -18,7 +18,7 @@ if (os.type()=="Windows_NT")
 }
 else
 {
-	actualport = '8080';
+	actualport = '80';
 } 
 
 var port = normalizePort(process.env.PORT || actualport);
