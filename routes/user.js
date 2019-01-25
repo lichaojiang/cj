@@ -50,7 +50,7 @@ router.get('/success', cors(bconst.corsOptions), async (req, res) => {
                 return bres.send(res, null, bres.ERROR);
             
             // generate token for frontend
-            bres.send(res, {token: hash})
+            bres.send(res, {token: hash, privilege: req.user.privilege})
         });
     } catch (err) {
         let err_status = bres.findStatus(err);
