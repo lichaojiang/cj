@@ -19,6 +19,7 @@ router.post('/', cors(bconst.corsOptions), auth(['user']), crud('user', user));
 router.get('/info', cors(bconst.corsOptions), auth(), async (req, res) => {
     try {
         let userInfo = await user.getUserInfo(req.user.user_id, req.user.organization_id);
+        userInfo.privilege = req.user.privilege;
         bres.send(res, userInfo);
     } catch (err) {
         let err_status = bres.findStatus(err);
