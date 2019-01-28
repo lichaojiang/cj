@@ -11,9 +11,10 @@ var indexRouter = require('./routes/index');
 var userRouter = require('./routes/user');
 var datatableRouter = require('./routes/datatable');
 var bivcloudRouter = require('./routes/bivcloud');
-var plotRouter = require('./routes/plot');
+var analysisRouter = require('./routes/analysis');
 var productionRouter = require('./routes/production');
 var chartDataRounter = require('./routes/chartdata');
+var infoRouter = require('./routes/info');
 
 // authtification packages
 var expressValidator = require('express-validator');
@@ -66,21 +67,22 @@ app.use('/', indexRouter);
 app.use('/user', userRouter);
 app.use('/datatable', datatableRouter);
 app.use('/apps', bivcloudRouter);
-app.use('/plot', plotRouter);
+app.use('/analysis', analysisRouter);
 app.use('/production', productionRouter);
 app.use('/chartdata', chartDataRounter);
+app.use('/info', infoRouter);
 
 app.get('/orange', (req, res) => {
     res.sendFile('/var/bivServer/public/companyweb/img/orange.jpg');
 });
 
-passport.use(new LocalStrategy((username, password, done) => {
-    const user = require('./lib/bUser').user;
-    let userObj = new user('user');
-    userObj.verifyUser(username, password, done).catch(err => {
+passport.use(new LocalStrategy(async (username, password, done) => {
+    try {
+        const userCls = require('./lib/bUser').user;
+        await userCls.verifyUser(username, password, done);
+    } catch (err) {
         console.log(err);
-        return Promise.reject(err);
-    });
+    }
 }));
 
 // catch 404 and forward to error handler

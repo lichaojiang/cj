@@ -13,11 +13,20 @@ const auth = require('../lib/bUtils').userAuth;
 router.options("/*", cors(bconst.corsOptions)); 
 
 // user route
-router.post('/', cors(bconst.corsOptions), auth(), crud('user', user));
+router.post('/', cors(bconst.corsOptions), auth(['user']), crud('user', user));
 
 // user info
-router.get('/info', cors(bconst.corsOptions), auth(), (req, res) => {
-    bres.send(res, req.user);
+router.get('/info', cors(bconst.corsOptions), auth(), async (req, res) => {
+    try {
+        let userInfo = await user.getUserInfo(req.user.user_id, req.user.organization_id);
+        userInfo.privilege = req.user.privilege;
+        bres.send(res, userInfo);
+    } catch (err) {
+        let err_status = bres.findStatus(err);
+        console.log(err_status);
+        console.log(err.stack);
+        return bres.send(res, null, err_status);
+    }
 })
 
 // login route
@@ -33,15 +42,23 @@ router.post('/logout', cors(bconst.corsOptions), (req, res) => {
 });
 
 // login success
-router.get('/success', cors(bconst.corsOptions), (req, res) => {
+router.get('/success', cors(bconst.corsOptions), async (req, res) => {
     const bcrypt = require('bcrypt');
     let saltRounds = 2;
-    bcrypt.hash(req.user.email, saltRounds, (err, hash) => {
-        if (err) 
-            bres.send(res, null, bres.ERROR);
-        
-        bres.send(res, {token: hash})
-    });
+    try {
+        bcrypt.hash(req.user.user_id.toString(), saltRounds, (err, hash) => {
+            if (err) 
+                return bres.send(res, null, bres.ERROR);
+            
+            // generate token for frontend
+            bres.send(res, {token: hash, privilege: req.user.privilege})
+        });
+    } catch (err) {
+        let err_status = bres.findStatus(err);
+        console.log(err_status);
+        console.log(err.stack);
+        bres.send(res, null, err_status);
+    }
 })
 
 // login failure
@@ -49,17 +66,12 @@ router.get('/failure', cors(bconst.corsOptions), (req, res) => {
     bres.send(res, 'Login failed');
 })
 
-passport.serializeUser((user_id, done) => {
-    done(null, user_id);
+passport.serializeUser((user, done) => {
+    done(null, user);
 }); 
   
-passport.deserializeUser((sessionUser, done) => {
-    let userTable = new user('user');
-    return userTable.getUserInfo(sessionUser.user_id, (userInfo) => {
-        done(null, userInfo);
-    }).catch(err => {
-        console.log(err);
-    });
+passport.deserializeUser((user, done) => {
+    done(null, user)
 });
 
 module.exports = router;

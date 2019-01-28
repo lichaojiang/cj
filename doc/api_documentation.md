@@ -1,8 +1,8 @@
-# plot
+# analysis
 1. line
     * url
         ```
-        www.bivrost.cn/plot
+        www.bivrost.cn/analysis
         ```
     * params
         ```
@@ -16,7 +16,7 @@
 2. any
     * url
         ```
-        www.bivrost.cn/plot
+        www.bivrost.cn/analysis
         ```
     * params
         ```
