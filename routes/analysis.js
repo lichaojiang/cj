@@ -82,9 +82,9 @@ router.post('/', cors(bconst.corsOptions), auth(['analysis']), function(req, res
             api_analysis = path.join(bconst.exedir, "getDataWithTime.py");
 
             let options = {};
-            if (typeof req.body.query.min !== "undefined")
+            if (req.body.query.min)
                 options.min = req.body.query.min
-            if (typeof req.body.query.max !== "undefined")
+            if (req.body.query.max)
                 options.max = req.body.query.max
             
             options = JSON.stringify(options);

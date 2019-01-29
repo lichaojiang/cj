@@ -5,6 +5,7 @@ var cookieParser = require('cookie-parser');
 var logger = require('morgan');
 var cors = require('cors');
 var bconst = require('./lib/bConstants');
+var bres = require('./lib/bResponse');
 //var bodyParser = require('body-parser');
 
 var indexRouter = require('./routes/index');
@@ -15,6 +16,7 @@ var analysisRouter = require('./routes/analysis');
 var productionRouter = require('./routes/production');
 var chartDataRounter = require('./routes/chartdata');
 var infoRouter = require('./routes/info');
+var roleRouter = require('./routes/role');
 
 // authtification packages
 var expressValidator = require('express-validator');
@@ -71,6 +73,7 @@ app.use('/analysis', analysisRouter);
 app.use('/production', productionRouter);
 app.use('/chartdata', chartDataRounter);
 app.use('/info', infoRouter);
+app.use('/role', roleRouter);
 
 app.get('/orange', (req, res) => {
     res.sendFile('/var/bivServer/public/companyweb/img/orange.jpg');
@@ -92,6 +95,15 @@ app.use(function(req, res, next) {
 
 // error handler
 app.use(function(err, req, res, next) {
+    let err_status = bres.findStatus(err);
+    console.log(err_status);
+    console.log(err.stack);
+    res.locals.message = err_status.description;
+    res.locals.error = req.app.get('env') === 'development' ? err : {};
+    res.status(err_status.returncode);
+    res.render('error');
+
+    /* original error handler
     // set locals, only providing error in development
     res.locals.message = err.message;
     res.locals.error = req.app.get('env') === 'development' ? err : {};
@@ -99,6 +111,7 @@ app.use(function(err, req, res, next) {
     // render the error page
     res.status(err.status || 500);
     res.render('error');
+    */
 });
 
 app.all('*', cors(bconst.corsOptions), function(req, res, next) {

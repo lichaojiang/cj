@@ -15,6 +15,9 @@ router.options("/*", cors(bconst.corsOptions));
 // user route
 router.post('/', cors(bconst.corsOptions), auth(['user']), crud('user', user));
 
+// get user list
+router.post('/list', cors(bconst.corsOptions), auth(['user', 'production']), crud('user', user, readOnly=true));
+
 // user info
 router.get('/info', cors(bconst.corsOptions), auth(), async (req, res) => {
     try {
