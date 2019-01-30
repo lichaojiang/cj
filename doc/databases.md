@@ -8,7 +8,7 @@
         included_modules TEXT NOT NULL,
         created_at TIMESTAMP NULL DEFAULT CURRENT_TIMESTAMP,
         updated_at TIMESTAMP NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
-        isdeleted MEDIUMINT NOT NULL DEFAULT 0,
+        isdeleted MEDIUMINT NULL DEFAULT 0,
         PRIMARY KEY (id),
         UNIQUE KEY name (name, isdeleted)
     ) CHARACTER SET = utf8;
@@ -60,7 +60,7 @@
         department_id MEDIUMINT,
         created_at TIMESTAMP NULL DEFAULT CURRENT_TIMESTAMP,
         updated_at TIMESTAMP NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
-        isdeleted MEDIUMINT NOT NULL DEFAULT 0,
+        isdeleted MEDIUMINT NULL DEFAULT 0,
         PRIMARY KEY (id),
         UNIQUE KEY email (email, isdeleted),
         FOREIGN KEY (organization_id) REFERENCES organization(id), 
@@ -96,7 +96,7 @@
         note TEXT,
         created_at TIMESTAMP NULL DEFAULT CURRENT_TIMESTAMP,
         updated_at TIMESTAMP NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
-        isdeleted MEDIUMINT NOT NULL DEFAULT 0,
+        isdeleted MEDIUMINT NULL DEFAULT 0,
         PRIMARY KEY (id),
         UNIQUE KEY name (name, isdeleted)
     ) CHARACTER SET = utf8;
@@ -114,7 +114,7 @@
         note TEXT,
         created_at TIMESTAMP NULL DEFAULT CURRENT_TIMESTAMP,
         updated_at TIMESTAMP NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
-        isdeleted MEDIUMINT NOT NULL DEFAULT 0,
+        isdeleted MEDIUMINT NULL DEFAULT 0,
         PRIMARY KEY (id),
         UNIQUE KEY name (name, isdeleted),
         FOREIGN KEY (productgroup_id) REFERENCES productgroup(id) ON DELETE SET NULL
@@ -137,7 +137,7 @@
         note TEXT,
         created_at TIMESTAMP NULL DEFAULT CURRENT_TIMESTAMP,
         updated_at TIMESTAMP NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
-        isdeleted MEDIUMINT NOT NULL DEFAULT 0,
+        isdeleted MEDIUMINT NULL DEFAULT 0,
         PRIMARY KEY (id),
         FOREIGN KEY (product_id) REFERENCES product(id) ON DELETE SET NULL,
         FOREIGN KEY (assignee_id) REFERENCES user(id)
