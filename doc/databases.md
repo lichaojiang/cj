@@ -161,6 +161,28 @@
     ) CHARACTER SET = utf8;
 ```
 
+# variable
+```sql
+    CREATE TABLE variable (
+        id MEDIUMINT NOT NULL AUTO_INCREMENT,
+        name VARCHAR(50) NOT NULL,
+        type VARCHAR(50) NOT NULL,
+        content TEXT NOT NULL,
+        description TEXT,
+        created_at TIMESTAMP NULL DEFAULT CURRENT_TIMESTAMP,
+        updated_at TIMESTAMP NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+        UNIQUE KEY (name),
+        PRIMARY KEY (id)
+    ) CHARACTER SET = utf8;
+    INSERT INTO variable (name, type, content, description) 
+    VALUES ("throughput", "basic", "总产出", "所选时间内的总产出"), 
+    ("elasped", "basic", "总时间", "所选时间（秒）"),
+    ("setup", "basic", "调机时间", "调机所用时间（秒）"),
+    ("poweroff", "basic", "关机时间", "关机的时间（秒）"),
+    ("working", "basic", "工作时间", "正常生产（非调机非关机）时间（秒）"),
+    ("效率", "user-defined", "3600*throughput/(elasped-setup-poweroff)", "每小时效率");
+```
+
 # grant permission
 ```sql
     GRANT ALL PRIVILEGES ON bivcloud_beta.* TO 'developer'@'%' IDENTIFIED BY 'password';
