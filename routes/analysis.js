@@ -11,9 +11,13 @@ const banalysis = require('../lib/bAnalysislib');
 const bres = require('../lib/bResponse');
 const bUtil = require('../lib/bUtils');
 const auth = require('../lib/bUtils').userAuth;
+const variable = require('../lib/bVariable').variable;
+const crud = require('../lib/bCrudlib');
 
 
 router.options("/*", cors(bconst.corsOptions)); 
+
+router.post('/variable', cors(bconst.corsOptions), auth(['analysis']), crud('variable', variable));
 
 /* POST users listing. */
 router.post('/', cors(bconst.corsOptions), auth(['analysis']), function(req, res, next) {
