@@ -18,6 +18,7 @@ var chartDataRounter = require('./routes/chartdata');
 var infoRouter = require('./routes/info');
 var roleRouter = require('./routes/role');
 var departmentRouter = require('./routes/department');
+var variableRouter = require('./routes/variable');
 
 // authtification packages
 var expressValidator = require('express-validator');
@@ -76,6 +77,7 @@ app.use('/chartdata', chartDataRounter);
 app.use('/info', infoRouter);
 app.use('/role', roleRouter);
 app.use('/department', departmentRouter);
+app.use('/variable',variableRouter);
 
 app.get('/orange', (req, res) => {
     res.sendFile('/var/bivServer/public/companyweb/img/orange.jpg');
