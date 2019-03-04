@@ -64,7 +64,6 @@ bivstats_env="bivstats"
 bivstats_path=$(conda info --env | grep "/envs/${bivstats_env}")
 # echo $bivstats_env
 if [ ! -z "$bivstats_path" ];then
-    conda remove --prefix "${ROOT_DIR}/envs/${bivstats_env}" --all --yes --force
     conda remove --name bivstats --all --yes --force
 fi
 
