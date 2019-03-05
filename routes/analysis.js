@@ -127,14 +127,23 @@ router.post('/', cors(bconst.corsOptions), auth(['analysis']), function(req, res
                 if (err)
                     return await bres.throw(null, bres.ERROR);
 
-                let variables = "throughput,elasped,setup,poweroff,working";
-                variableObj = new variable('variable');       
-                let recipe = variableObj.get_recipe().toString();         
-                // python magicbag.py throughput,elasped,setup,poweroff throughput/(elasped-setup-poweroff) 1 2018-7-16 7 08:00:00-12:00:00,13:30:00-17:30:00 /dump_dir
-                cmdstr = `${bconst.statspython} ${api_analysis} '${variables}' '${recipe}' ${query.machine} '${query.start_date}' ${query.days} '${query.intervals}' '${dump_dir}'`;
-                console.log("cmd string is:" + cmdstr);
+                // let variables = "throughput,elasped,setup,poweroff,working";
+                // let variableObj = new variable('variable');
+                // let recipe = await variableObj.get_recipe(req);
+                // await variableObj.endSql(); 
+                // // python magicbag.py throughput,elasped,setup,poweroff throughput/(elasped-setup-poweroff) 1 2018-7-16 7 08:00:00-12:00:00,13:30:00-17:30:00 /dump_dir
+                // cmdstr = `${bconst.statspython} ${api_analysis} '${variables}' '${recipe}' ${query.machine} '${query.start_date}' ${query.days} '${query.intervals}' '${dump_dir}'`;
+                // console.log("cmd string is:" + cmdstr);
 
                 try {
+                    let variables = "throughput,elasped,setup,poweroff";
+                    let variableObj = new variable('variable');
+                    let recipe = await variableObj.get_recipe(req);
+                    await variableObj.endSql(); 
+                    // python magicbag.py throughput,elasped,setup,poweroff throughput/(elasped-setup-poweroff) 1 2018-7-16 7 08:00:00-12:00:00,13:30:00-17:30:00 /dump_dir
+                    cmdstr = `${bconst.statspython} ${api_analysis} '${variables}' '${recipe}' ${query.machine} '${query.start_date}' ${query.days} '${query.intervals}' '${dump_dir}'`;
+                    console.log("cmd string is:" + cmdstr);
+
                     let output = await bUtil.execute(cmdstr, banalysis.analysisAny);
                     bres.send(res, output.data, output.status);    
                 } catch (err) {
