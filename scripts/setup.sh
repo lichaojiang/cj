@@ -27,7 +27,8 @@ if [ ! -z "$isDarwin" ];then
     source ~/.bash_profile
 elif [ ! -z "$isLinux" ];then
     conda_path=$(cat ~/.bashrc | grep "conda3/")
-    eval $conda_path
+    # eval $conda_path
+    source ~/.bashrc
 fi
 
 # 安装miniconda
@@ -53,15 +54,17 @@ if [ ! -z "$isDarwin" ];then
     source ~/.bash_profile
 elif [ ! -z "$isLinux" ];then
     conda_path=$(cat ~/.bashrc | grep "conda3/")
-    eval $conda_path
+    # eval $conda_path
+    source ~/.bashrc
 fi
 
 # 安装虚拟环境
+bivstats_env="bivstats"
 # bivstats
-bivstats_env=$(conda info --env | grep "${ROOT_DIR}/envs/bivstats")
-echo $bivstats_env
-if [ ! -z "$bivstats_env" ];then
-    conda remove --prefix "${ROOT_DIR}/envs/bivstats" --all --yes --force
+bivstats_path=$(conda info --env | grep "/envs/${bivstats_env}")
+# echo $bivstats_env
+if [ ! -z "$bivstats_path" ];then
+    conda remove --name bivstats --all --yes --force
 fi
 
 # create environment
@@ -82,7 +85,7 @@ do
     # remove everything up to colon and leading whitespace
     name=$(echo ${name#*:} | sed -e 's/^[[:space:]]*//')
     # create environment
-    conda env create --prefix "${ROOT_DIR}/envs/${name}" --file "${core_dir}/${i}"
+    conda env create --name ${bivstats_env} --file "${core_dir}/${i}"
 done
 
 cd $cwd
