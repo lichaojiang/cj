@@ -127,8 +127,9 @@ router.post('/', cors(bconst.corsOptions), auth(['analysis']), function(req, res
                 if (err)
                     return await bres.throw(null, bres.ERROR);
 
+                let variables = "throughput,elasped,setup,poweroff,working";                
                 // python magicbag.py throughput,elasped,setup,poweroff throughput/(elasped-setup-poweroff) 1 2018-7-16 7 08:00:00-12:00:00,13:30:00-17:30:00 /dump_dir
-                cmdstr = `${bconst.statspython} ${api_analysis} '${query.variables}' '${query.recipe}' ${query.machine} '${query.start_date}' ${query.days} '${query.intervals}' '${dump_dir}'`;
+                cmdstr = `${bconst.statspython} ${api_analysis} '${variables}' '${query.recipe}' ${query.machine} '${query.start_date}' ${query.days} '${query.intervals}' '${dump_dir}'`;
                 console.log("cmd string is:" + cmdstr);
 
                 try {
